@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<title>Blender — Шпаргалка для максівця</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0d1117;--card:#161b22;--border:#21262d;
+    --accent:#4f7cff;--green:#3fb950;--yellow:#e3b341;
+    --orange:#f0883e;--red:#f85149;--purple:#bc8cff;
+    --text:#e6edf3;--dim:#8b949e;--muted:#484f58
+  }
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.5}
+
+  /* HEADER */
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:100}
+  .logo{font-size:16px;font-weight:700;white-space:nowrap}
+  .logo em{color:#e87d0d;font-style:normal}
+  .search-wrap{flex:1;min-width:180px;position:relative}
+  #search{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 14px 8px 36px;color:var(--text);font-size:14px;outline:none;transition:border-color .2s}
+  #search:focus{border-color:var(--accent)}
+  #search::placeholder{color:var(--muted)}
+  .si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+  #count{font-size:12px;color:var(--muted);white-space:nowrap;min-width:70px}
+
+  /* TABS */
+  .tabs-wrap{position:relative;border-bottom:1px solid var(--border)}
+  .tabs-wrap::after{content:'';position:absolute;right:0;top:0;bottom:0;width:40px;background:linear-gradient(to right,transparent,var(--bg));pointer-events:none;z-index:2}
+  .tabs{display:flex;gap:1px;padding:8px 28px 0;overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;border-bottom:none}
+  .tabs::-webkit-scrollbar{height:3px}
+  .tabs::-webkit-scrollbar-track{background:transparent}
+  .tabs::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+  .tab{padding:6px 11px;border-radius:7px 7px 0 0;cursor:pointer;font-size:11px;font-weight:600;color:var(--dim);border:1px solid transparent;border-bottom:none;white-space:nowrap;transition:all .15s;user-select:none}
+  .tab:hover{color:var(--text);background:rgba(255,255,255,.04)}
+  .tab.active{background:var(--card);border-color:var(--border);color:var(--accent)}
+
+  /* MAIN */
+  main{padding:0 28px 80px}
+  .section{margin-top:24px;display:none}
+  .section.visible{display:block}
+  .section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:10px;padding-left:2px}
+
+  /* TABLE */
+  .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:4px}
+  table{width:100%;border-collapse:collapse}
+  thead th{padding:9px 14px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;text-align:left;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
+  th:nth-child(1){width:27%}th:nth-child(2){width:33%}th:nth-child(3){width:40%}
+  tbody tr{border-bottom:1px solid rgba(33,38,45,.8);transition:background .1s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(79,124,255,.05)}
+  tbody tr.hidden{display:none}
+  td{padding:9px 14px;vertical-align:top}
+  td:first-child{font-weight:600;color:var(--text)}
+  .how{color:#cdd9e5}
+  .note-col{color:var(--dim);font-size:13px}
+
+  /* KEYS */
+  kbd{display:inline-block;background:#1c2128;border:1px solid #373e47;border-bottom:2px solid #2d333b;border-radius:5px;padding:1px 7px;font-family:'Consolas',monospace;font-size:12px;color:#7dc4e4;white-space:nowrap;margin:1px 0}
+
+  /* TAGS */
+  .tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;vertical-align:middle}
+  .tip{background:rgba(79,124,255,.15);color:var(--accent)}
+  .warn{background:rgba(227,179,65,.15);color:var(--yellow)}
+  .arch{background:rgba(63,185,80,.12);color:var(--green)}
+  .new{background:rgba(188,140,255,.12);color:var(--purple)}
+
+  /* RECIPE CARDS */
+  .recipes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+  .recipe-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;transition:border-color .2s}
+  .recipe-card:hover{border-color:rgba(79,124,255,.4)}
+  .recipe-card.hidden{display:none}
+  .rc-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .rc-icon{font-size:24px;line-height:1}
+  .rc-title{font-size:15px;font-weight:700}
+  .rc-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-left:auto;white-space:nowrap}
+  .badge-mat{background:rgba(79,124,255,.15);color:var(--accent);border:1px solid rgba(79,124,255,.3)}
+  .badge-light{background:rgba(227,179,65,.12);color:var(--yellow);border:1px solid rgba(227,179,65,.25)}
+  .badge-sim{background:rgba(240,136,62,.12);color:var(--orange);border:1px solid rgba(240,136,62,.25)}
+  .badge-model{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.25)}
+  .steps{list-style:none;display:flex;flex-direction:column;gap:7px}
+  .steps li{display:flex;gap:10px;font-size:13px;color:var(--dim)}
+  .step-num{background:rgba(79,124,255,.2);color:var(--accent);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+  .steps li b{color:var(--text)}
+  .rc-tip{margin-top:12px;padding:10px;background:rgba(79,124,255,.06);border-radius:8px;border-left:3px solid var(--accent);font-size:12px;color:var(--dim)}
+  .rc-tip b{color:var(--accent)}
+
+  /* WTF CARDS */
+  .wtf-list{display:flex;flex-direction:column;gap:12px}
+  .wtf-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;gap:16px;transition:border-color .2s}
+  .wtf-card:hover{border-color:rgba(248,81,73,.3)}
+  .wtf-card.hidden{display:none}
+  .wtf-problem{flex:1}
+  .wtf-q{font-size:14px;font-weight:700;color:var(--red);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .wtf-q::before{content:'?';background:rgba(248,81,73,.15);border:1px solid rgba(248,81,73,.3);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+  .wtf-a{font-size:13px;color:var(--dim);line-height:1.6}
+  .wtf-a b{color:var(--text)}
+  .wtf-a kbd{font-size:11px}
+
+  /* NO RESULTS */
+  #no-results{display:none;text-align:center;padding:80px 20px;color:var(--muted)}
+  #no-results.show{display:block}
+
+  /* MODE BUTTONS */
+  .mode-btn{background:var(--card);border:1px solid var(--border);color:var(--dim);padding:7px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
+  .mode-btn:hover{color:var(--text);border-color:var(--accent)}
+  .mode-btn.active{background:rgba(79,124,255,.15);border-color:var(--accent);color:var(--accent)}
+
+  /* KEYBOARD */
+  .kb-row{display:flex;gap:4px;margin-bottom:0}
+  .kk{background:#1c2128;border:1px solid #373e47;border-bottom:3px solid #21262d;border-radius:6px;min-width:40px;padding:6px 4px 5px;display:flex;flex-direction:column;align-items:center;cursor:default;transition:transform .1s;flex-shrink:0}
+  .kk:hover{transform:translateY(-1px)}
+  .kk.w15{min-width:62px}.kk.w17{min-width:70px}.kk.w20{min-width:82px}.kk.w25{min-width:104px}.kk.w60{min-width:250px}
+  .kk-l{font-size:11px;font-weight:700;color:#8b949e;line-height:1}
+  .kk-fn{font-size:9px;color:#484f58;text-align:center;margin-top:2px;line-height:1.2;min-height:18px}
+  .kk.t{background:rgba(79,124,255,.15);border-color:rgba(79,124,255,.4)}.kk.t .kk-l{color:#4f7cff}.kk.t .kk-fn{color:#7da4ff}
+  .kk.s{background:rgba(227,179,65,.12);border-color:rgba(227,179,65,.35)}.kk.s .kk-l{color:#e3b341}.kk.s .kk-fn{color:#c9a530}
+  .kk.v{background:rgba(188,140,255,.12);border-color:rgba(188,140,255,.35)}.kk.v .kk-l{color:#bc8cff}.kk.v .kk-fn{color:#a87de8}
+  .kk.e{background:rgba(240,136,62,.12);border-color:rgba(240,136,62,.35)}.kk.e .kk-l{color:#f0883e}.kk.e .kk-fn{color:#d8793a}
+  .kk.o{background:rgba(63,185,80,.12);border-color:rgba(63,185,80,.3)}.kk.o .kk-l{color:#3fb950}.kk.o .kk-fn{color:#38a849}
+  .kk.d{background:rgba(248,81,73,.12);border-color:rgba(248,81,73,.3)}.kk.d .kk-l{color:#f85149}.kk.d .kk-fn{color:#e04a43}
+  .kk.u{background:rgba(139,148,158,.08);border-color:rgba(139,148,158,.25)}.kk.u .kk-l{color:#8b949e}.kk.u .kk-fn{color:#6e7881}
+  .kk.mod{background:#111318}.kk.mod .kk-l{color:#484f58}
+
+  /* LEGEND */
+  .kl{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--dim)}
+  .kl::before{content:'';width:12px;height:12px;border-radius:3px;background:var(--c);opacity:.7;flex-shrink:0}
+
+  /* QUIZ */
+  .quiz-wrap{max-width:560px;margin:0 auto}
+  .quiz-top{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+  .quiz-bar-wrap{flex:1}
+  .quiz-bar{background:var(--border);border-radius:100px;height:7px;overflow:hidden}
+  .quiz-fill{background:linear-gradient(90deg,var(--accent),var(--green));height:100%;border-radius:100px;transition:width .4s}
+  .quiz-stat{font-size:11px;color:var(--dim);margin-top:3px}
+  .quiz-streak{font-size:13px;font-weight:700;color:var(--yellow);white-space:nowrap}
+  .quiz-cats{display:flex;gap:5px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  .quiz-cats::-webkit-scrollbar{display:none}
+  .qcat{background:var(--card);border:1px solid var(--border);color:var(--dim);padding:4px 10px;border-radius:100px;cursor:pointer;font-size:11px;font-weight:600;transition:all .15s;white-space:nowrap;flex-shrink:0}
+  .qcat:hover,.qcat.on{background:rgba(79,124,255,.15);border-color:var(--accent);color:var(--accent)}
+  .quiz-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 24px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:14px;transition:border-color .3s}
+  .quiz-card.correct{border-color:var(--green);background:rgba(63,185,80,.05)}
+  .quiz-card.wrong{border-color:var(--red);background:rgba(248,81,73,.05)}
+  .qc-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+  .qc-q{font-size:20px;font-weight:700;color:var(--text);line-height:1.3}
+  .qc-hint{font-size:12px;color:var(--muted);font-style:italic;min-height:16px}
+  .qc-ans-wrap{margin:4px 0}
+  .qc-ans{background:rgba(79,124,255,.08);border:1px dashed rgba(79,124,255,.35);border-radius:10px;padding:14px 20px;cursor:pointer;user-select:none;transition:all .25s;color:var(--muted);font-size:13px}
+  .qc-ans:hover{border-color:rgba(79,124,255,.6);background:rgba(79,124,255,.12)}
+  .qc-ans.show{background:rgba(79,124,255,.12);border:1px solid rgba(79,124,255,.4);color:var(--accent);font-size:17px;font-weight:700;cursor:default}
+  .quiz-actions{display:flex;gap:10px;justify-content:center}
+  .q-btn{padding:12px 0;border-radius:10px;border:none;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;flex:1;max-width:160px;opacity:.35;pointer-events:none}
+  .quiz-card.revealed .q-btn{opacity:1;pointer-events:auto}
+  .q-knew{background:rgba(63,185,80,.2);color:var(--green);border:1px solid rgba(63,185,80,.4)}
+  .q-knew:hover{background:rgba(63,185,80,.4)}
+  .q-didnt{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.3)}
+  .q-didnt:hover{background:rgba(248,81,73,.28)}
+  .quiz-done{text-align:center;padding:40px 20px;display:none}
+  .quiz-done h2{font-size:26px;margin-bottom:10px}
+  .quiz-done p{color:var(--dim);margin-bottom:20px}
+  .quiz-reset{background:var(--accent);color:#fff;border:none;padding:12px 28px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
+  .quiz-skip{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;margin-top:4px;text-decoration:underline;display:block;text-align:center}
+
+  /* CHECKLIST */
+  .cl-group{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+  .cl-group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px}
+  .cl-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(33,38,45,.6);cursor:pointer;user-select:none}
+  .cl-item:last-child{border-bottom:none}
+  .cl-cb{width:18px;height:18px;border:2px solid var(--muted);border-radius:5px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .cl-item.done .cl-cb{background:var(--green);border-color:var(--green)}
+  .cl-item.done .cl-cb::after{content:'✓';color:#fff;font-size:11px;font-weight:700}
+  .cl-item.done .cl-text{color:var(--muted);text-decoration:line-through}
+  .cl-text{font-size:14px;color:var(--text);line-height:1.4}
+  .cl-text small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+  .cl-progress{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:12px}
+  .cl-pbar{flex:1;background:var(--border);border-radius:100px;height:10px;overflow:hidden}
+  .cl-pfill{background:linear-gradient(90deg,var(--accent),var(--green));height:100%;border-radius:100px;transition:width .3s}
+  .cl-reset{background:none;border:1px solid var(--border);color:var(--dim);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px}
+  .cl-reset:hover{border-color:var(--red);color:var(--red)}
+
+  /* PRINT */
+  @media print{
+    header,button,.tabs,#no-results,#count,.quiz-wrap,.cl-reset{display:none!important}
+    body{background:#fff!important;color:#000!important;font-size:11px}
+    .section{display:block!important;margin-top:12px;page-break-inside:avoid}
+    .table-wrap{border:1px solid #ccc!important;border-radius:0!important}
+    table{border-collapse:collapse}
+    td,th{border-bottom:1px solid #eee!important;padding:5px 8px!important;color:#000!important}
+    .section-title{color:#333!important;margin-top:16px}
+    .recipe-card,.wtf-card,.cl-group{border:1px solid #ddd!important;background:#fff!important;border-radius:4px}
+    kbd{background:#f0f0f0!important;border:1px solid #ccc!important;color:#000!important}
+    .tag{border:1px solid #ccc!important;color:#444!important;background:#f5f5f5!important}
+    a{color:#000!important;text-decoration:none}
+  }
+
+  @media(max-width:680px){
+    header,.tabs,main{padding-left:14px;padding-right:14px}
+    th:nth-child(3),td:nth-child(3){display:none}
+    .recipes-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Blender — шпаргалка для <em>максівця</em></div>
+  <button onclick="window.print()" style="background:var(--muted);border:none;color:var(--text);padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap">🖨 Друк</button>
+  <div class="search-wrap">
+    <svg class="si" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" id="search" placeholder="chamfer, turbosmooth, attach, glass, cloth..." autocomplete="off" spellcheck="false">
+  </div>
+  <div id="count"></div>
+</header>
+
+<div class="tabs-wrap">
+<div class="tabs">
+  <div class="tab active" data-tab="all">Всі</div>
+  <div class="tab" data-tab="nav">🖱 Навігація</div>
+  <div class="tab" data-tab="select">⬜ Виділення</div>
+  <div class="tab" data-tab="transform">↔ Трансформ</div>
+  <div class="tab" data-tab="edit">🔧 Моделювання</div>
+  <div class="tab" data-tab="modifiers">📦 Модифікатори</div>
+  <div class="tab" data-tab="uv">🗺 UV</div>
+  <div class="tab" data-tab="materials">🎨 Матеріали</div>
+  <div class="tab" data-tab="render">🎬 Рендер</div>
+  <div class="tab" data-tab="sculpt">🪨 Скульпт</div>
+  <div class="tab" data-tab="anim">🎞 Анімація</div>
+  <div class="tab" data-tab="scene">🗂 Сцена</div>
+  <div class="tab" data-tab="recipes">🧪 Рецепти</div>
+  <div class="tab" data-tab="wtf">🤯 WTF</div>
+  <div class="tab" data-tab="keys">⌨️ Клавіші</div>
+  <div class="tab" data-tab="addons">🧩 Аддони</div>
+  <div class="tab" data-tab="concepts">💡 Концепції</div>
+  <div class="tab" data-tab="resources">🔗 Ресурси</div>
+  <div class="tab" data-tab="quiz">🧠 Quiz</div>
+  <div class="tab" data-tab="checklist">✅ Перед рендером</div>
+  <div class="tab" data-tab="settings">⚙️ Налаштування</div>
+</div>
+</div>
+
+<main>
+
+<!-- NAV -->
+<div class="section visible" data-section="nav">
+  <div class="section-title">🖱 Навігація у в'юпорті</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити</th><th>Як в Blender</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="orbit rotate pan viewport middle mouse"><td>Обертати вьюпорт</td><td class="how"><kbd>Middle Mouse</kbd> drag</td><td class="note-col">Як в Max</td></tr>
+      <tr data-tags="pan move scroll viewport shift middle"><td>Панорамувати</td><td class="how"><kbd>Shift</kbd>+<kbd>Middle</kbd> drag</td><td class="note-col">В Max був Ctrl — тут Shift <span class="tag warn">УВАГА</span></td></tr>
+      <tr data-tags="zoom in out scroll wheel"><td>Зум</td><td class="how"><kbd>Scroll</kbd> або <kbd>Ctrl</kbd>+<kbd>Middle</kbd> drag</td><td class="note-col"></td></tr>
+      <tr data-tags="focus frame selection object numpad period"><td>Фокус на виділеному</td><td class="how"><kbd>Numpad .</kbd></td><td class="note-col">Або <kbd>~</kbd> → View Selected</td></tr>
+      <tr data-tags="front view numpad 1"><td>Вид спереду / ззаду</td><td class="how"><kbd>Numpad 1</kbd> / <kbd>Ctrl+Numpad 1</kbd></td><td class="note-col">Ctrl = протилежний бік</td></tr>
+      <tr data-tags="top view numpad 7 overhead"><td>Вид зверху / знизу</td><td class="how"><kbd>Numpad 7</kbd> / <kbd>Ctrl+Numpad 7</kbd></td><td class="note-col"></td></tr>
+      <tr data-tags="right side view numpad 3"><td>Вид збоку</td><td class="how"><kbd>Numpad 3</kbd> / <kbd>Ctrl+Numpad 3</kbd></td><td class="note-col"></td></tr>
+      <tr data-tags="perspective ortho orthographic toggle numpad 5"><td>Перспектива ↔ Ортогональний</td><td class="how"><kbd>Numpad 5</kbd></td><td class="note-col"></td></tr>
+      <tr data-tags="camera view render numpad 0"><td>Вид з камери</td><td class="how"><kbd>Numpad 0</kbd></td><td class="note-col">Повторне натискання = вийти</td></tr>
+      <tr data-tags="maximize viewport fullscreen ctrl space"><td>Максимізувати вьюпорт</td><td class="how"><kbd>Ctrl</kbd>+<kbd>Space</kbd></td><td class="note-col"></td></tr>
+      <tr data-tags="quad viewport four panels ctrl alt q"><td>4 вьюпорти (Quad)</td><td class="how"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Q</kbd></td><td class="note-col"></td></tr>
+      <tr data-tags="isolate solo hide others slash local"><td>Isolate / Solo</td><td class="how"><kbd>/</kbd> (слеш)</td><td class="note-col">Повторно = вийти</td></tr>
+      <tr data-tags="wireframe solid shaded mode z pie"><td>Режим відображення</td><td class="how"><kbd>Z</kbd> → Pie menu</td><td class="note-col">Solid / Wireframe / Material Preview / Rendered</td></tr>
+      <tr data-tags="xray through see inside alt z toggle"><td>X-Ray (бачити крізь)</td><td class="how"><kbd>Alt</kbd>+<kbd>Z</kbd></td><td class="note-col">Потрібно для виділення крізь геометрію <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="walk fly navigation wasd first person indoor"><td>Walk navigation (прогулянка)</td><td class="how"><kbd>Shift</kbd>+<kbd>`</kbd> → WASD</td><td class="note-col">Ідеально для archviz інтер'єру <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="align view face normal selected numpad"><td>Дивитись з грані (по нормалі)</td><td class="how">Виділи грань → <kbd>Shift+Numpad 1/3/7</kbd></td><td class="note-col">Вирівнює вьюпорт до нормалі грані</td></tr>
+      <tr data-tags="numpad laptop emulate keyboard setting"><td>Нема Numpad (ноутбук)</td><td class="how">Preferences → Input → Emulate Numpad</td><td class="note-col">Цифри 1–9 над буквами стають видами</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- SELECT -->
+<div class="section visible" data-section="select">
+  <div class="section-title">⬜ Виділення</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити</th><th>Як в Blender</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="select left click object"><td>Виділити</td><td class="how"><kbd>Left Click</kbd></td><td class="note-col">Shift+click = додати до виділення</td></tr>
+      <tr data-tags="deselect all none clear alt a"><td>Зняти все / Виділити все</td><td class="how"><kbd>Alt</kbd>+<kbd>A</kbd> / <kbd>A</kbd></td><td class="note-col">A двічі = виділити все</td></tr>
+      <tr data-tags="invert selection inverse ctrl i"><td>Інвертувати виділення</td><td class="how"><kbd>Ctrl</kbd>+<kbd>I</kbd></td><td class="note-col"></td></tr>
+      <tr data-tags="box select marquee b drag"><td>Box Select</td><td class="how"><kbd>B</kbd> → drag</td><td class="note-col">ПКМ drag = відняти від виділення</td></tr>
+      <tr data-tags="circle select paint brush c radius"><td>Circle Select</td><td class="how"><kbd>C</kbd></td><td class="note-col">Scroll = розмір. ПКМ = вийти</td></tr>
+      <tr data-tags="lasso freehand ctrl right mouse"><td>Lasso Select</td><td class="how"><kbd>Ctrl</kbd>+<kbd>Right Mouse</kbd> drag</td><td class="note-col"></td></tr>
+      <tr data-tags="edge loop alt click select ring"><td>Edge Loop / Ring</td><td class="how"><kbd>Alt</kbd>+click / <kbd>Ctrl+Alt</kbd>+click</td><td class="note-col">Як в Max</td></tr>
+      <tr data-tags="linked connected island l ctrl l"><td>Виділити з'єднане (island)</td><td class="how"><kbd>L</kbd> hover або <kbd>Ctrl</kbd>+<kbd>L</kbd></td><td class="note-col">L без кліку — просто наведи мишу <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="similar select same material shift g"><td>Виділити схожі (Select Similar)</td><td class="how"><kbd>Shift</kbd>+<kbd>G</kbd></td><td class="note-col">По матеріалу / нормалі / площі — потужно</td></tr>
+      <tr data-tags="grow shrink expand ctrl plus minus"><td>Розширити / звузити виділення</td><td class="how"><kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>Ctrl</kbd>+<kbd>-</kbd></td><td class="note-col"></td></tr>
+      <tr data-tags="checker nth every other deselect alternate"><td>Виділити через один (Checker)</td><td class="how">Select → Checker Deselect</td><td class="note-col">Крок налаштовується</td></tr>
+      <tr data-tags="boundary loop open edge border select"><td>Граничні ребра (відкриті краї)</td><td class="how">Select → Select Boundary Loop</td><td class="note-col"></td></tr>
+      <tr data-tags="sharp angle select crease edge hard"><td>Виділити гострі ребра</td><td class="how">Select → Select Sharp Edges → задай кут</td><td class="note-col">Корисно для авто-bevel по куту</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- TRANSFORM -->
+<div class="section visible" data-section="transform">
+  <div class="section-title">↔ Трансформації</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити</th><th>Як в Blender</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="move translate grab g axis"><td>Move</td><td class="how"><kbd>G</kbd> (потім X/Y/Z)</td><td class="note-col">G X 1.5 Enter = перемістити на 1.5м по X</td></tr>
+      <tr data-tags="rotate spin r axis angle degree"><td>Rotate</td><td class="how"><kbd>R</kbd> (потім вісь + число)</td><td class="note-col">R Z 90 Enter = повернути на 90° по Z</td></tr>
+      <tr data-tags="scale resize s axis"><td>Scale</td><td class="how"><kbd>S</kbd> (потім вісь + число)</td><td class="note-col">S X 2 Enter = вдвічі по X</td></tr>
+      <tr data-tags="plane constraint axis shift exclude xy xz yz"><td>Рух по площині (виключити вісь)</td><td class="how">G → <kbd>Shift</kbd>+Z = рух по XY</td><td class="note-col">Shift+вісь = виключити цю вісь</td></tr>
+      <tr data-tags="snap grid vertex face surface ctrl magnet shift tab"><td>Snap (прив'язка)</td><td class="how"><kbd>Shift</kbd>+<kbd>Tab</kbd> або кнопка магніту</td><td class="note-col">Тримай <kbd>Ctrl</kbd> під час G/R/S</td></tr>
+      <tr data-tags="edge slide gg along geometry parallel"><td>Edge Slide (ковзання вздовж)</td><td class="how"><kbd>G</kbd>+<kbd>G</kbd></td><td class="note-col">Дуже зручно — рухає вздовж, а не крізь геометрію <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="mirror flip ctrl m axis object"><td>Mirror</td><td class="how"><kbd>Ctrl</kbd>+<kbd>M</kbd> → X/Y/Z</td><td class="note-col"></td></tr>
+      <tr data-tags="apply transform reset xform rotation scale ctrl a"><td>Apply Transform (Reset XForm)</td><td class="how"><kbd>Ctrl</kbd>+<kbd>A</kbd> → Apply All</td><td class="note-col">Обов'язково перед FBX-експортом! <span class="tag warn">ВАЖЛИВО</span></td></tr>
+      <tr data-tags="pivot point origin center individual active cursor dot"><td>Pivot Point</td><td class="how"><kbd>.</kbd> (крапка) → вибрати</td><td class="note-col">Individual Origins / Active Element / 3D Cursor тощо</td></tr>
+      <tr data-tags="3d cursor place shift right click anchor snap"><td>3D Cursor (допоміжний якір)</td><td class="how"><kbd>Shift</kbd>+<kbd>Right Click</kbd></td><td class="note-col">Shift+S → Selection to Cursor / Cursor to Selected</td></tr>
+      <tr data-tags="inflate deflate normals alt s shrink fatten"><td>Inflate / Deflate по нормалях</td><td class="how"><kbd>Alt</kbd>+<kbd>S</kbd></td><td class="note-col">Рухає вздовж нормалей</td></tr>
+      <tr data-tags="proportional soft select falloff o radius scroll"><td>Proportional Edit (Soft Select)</td><td class="how"><kbd>O</kbd>, Scroll = радіус</td><td class="note-col">Типи: Smooth / Sphere / Root / Inverse Square</td></tr>
+      <tr data-tags="random transform jitter distribute variation position"><td>Randomize Transform</td><td class="how">Object → Transform → Randomize</td><td class="note-col">Розкидає об'єкти рандомно по позиції/ротації/масштабу</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- EDIT -->
+<div class="section visible" data-section="edit">
+  <div class="section-title">🔧 Моделювання (Edit Mode)</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити</th><th>Як в Blender</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="edit mode tab enter polygon mesh"><td>Увійти в Edit Mode</td><td class="how"><kbd>Tab</kbd></td><td class="note-col">Tab = перемикач Object ↔ Edit</td></tr>
+      <tr data-tags="vertex edge face mode 1 2 3 sub-object"><td>Вершини / Ребра / Грані</td><td class="how"><kbd>1</kbd> / <kbd>2</kbd> / <kbd>3</kbd></td><td class="note-col">Як в Max</td></tr>
+      <tr data-tags="extrude e face edge vertex push pull extend"><td>Extrude</td><td class="how"><kbd>E</kbd></td><td class="note-col">Alt+E = меню (Along Normals, Individual Faces тощо)</td></tr>
+      <tr data-tags="inset face i interior offset border"><td>Inset (відступ грані)</td><td class="how"><kbd>I</kbd></td><td class="note-col">I потім B = Individual (кожна грань окремо)</td></tr>
+      <tr data-tags="chamfer bevel ctrl b edge segments fillet round"><td>Chamfer / Bevel ребер</td><td class="how"><kbd>Ctrl</kbd>+<kbd>B</kbd></td><td class="note-col">Scroll = кількість сегментів. P = profile (форма) <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="bevel vertex corner ctrl shift b chamfer"><td>Bevel вершини</td><td class="how"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd></td><td class="note-col">Округлює вершину</td></tr>
+      <tr data-tags="loop cut ctrl r ring insert edge loop add"><td>Loop Cut (вставити петлю)</td><td class="how"><kbd>Ctrl</kbd>+<kbd>R</kbd></td><td class="note-col">Scroll = кількість петель. ПКМ = по центру</td></tr>
+      <tr data-tags="knife cut k slice free draw custom"><td>Knife (вільний розріз)</td><td class="how"><kbd>K</kbd></td><td class="note-col">Enter = підтвердити. C = angle snap. Z = cut through</td></tr>
+      <tr data-tags="bisect cut plane through flat slice boolean"><td>Bisect (розрізати площиною)</td><td class="how">Mesh → Bisect</td><td class="note-col">Fill = заповнити розріз. Clear Inner/Outer = видалити частину</td></tr>
+      <tr data-tags="merge weld vertices m collapse center cursor"><td>Merge / Weld вершин</td><td class="how"><kbd>M</kbd> → варіант</td><td class="note-col">By Distance = авто-weld дублікатів</td></tr>
+      <tr data-tags="remove doubles weld distance merge clean duplicate"><td>Remove Doubles (авто-weld)</td><td class="how">Mesh → Merge by Distance</td><td class="note-col">Задаєш поріг відстані</td></tr>
+      <tr data-tags="bridge edge loops connect ctrl e fill between"><td>Bridge Edge Loops</td><td class="how"><kbd>Ctrl</kbd>+<kbd>E</kbd> → Bridge Edge Loops</td><td class="note-col">Виділи дві петлі → Bridge</td></tr>
+      <tr data-tags="fill cap hole f face n-gon poly close"><td>Fill / Cap hole</td><td class="how"><kbd>F</kbd></td><td class="note-col">Alt+F = красивий Tri Fill по краям</td></tr>
+      <tr data-tags="grid fill quads topology ctrl f nice regular"><td>Grid Fill (красиві квади)</td><td class="how"><kbd>Ctrl</kbd>+<kbd>F</kbd> → Grid Fill</td><td class="note-col">Заповнює петлю рівними квадами — шикарно для дірок</td></tr>
+      <tr data-tags="delete remove x vertices edges faces"><td>Видалити геометрію</td><td class="how"><kbd>X</kbd> → меню</td><td class="note-col">Vertices / Edges / Faces / Dissolve / Only Edges</td></tr>
+      <tr data-tags="dissolve remove edge keep shape ctrl x topology"><td>Dissolve (без дірки)</td><td class="how"><kbd>Ctrl</kbd>+<kbd>X</kbd></td><td class="note-col">Видаляє петлю але зберігає форму</td></tr>
+      <tr data-tags="separate detach p split object part break"><td>Separate (відокремити)</td><td class="how"><kbd>P</kbd> → Selection / By Material / Loose Parts</td><td class="note-col">Як Detach в Max</td></tr>
+      <tr data-tags="join attach ctrl j combine merge objects"><td>Join / Attach</td><td class="how"><kbd>Ctrl</kbd>+<kbd>J</kbd> (Object Mode)</td><td class="note-col">Виділи всі → Ctrl+J</td></tr>
+      <tr data-tags="flip normals alt n recalculate shift n face direction"><td>Flip / Recalculate Normals</td><td class="how"><kbd>Alt</kbd>+<kbd>N</kbd> → Flip / <kbd>Shift</kbd>+<kbd>N</kbd></td><td class="note-col">Shift+N = авто назовні</td></tr>
+      <tr data-tags="smooth flat shading right click shade auto normals"><td>Smooth / Flat Shading</td><td class="how">ПКМ → Shade Smooth / Shade Flat</td><td class="note-col">Shade Smooth + Auto Smooth = hardsurface ideal <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="loop tools circle relax space evenly distribute addon"><td>Loop Tools (рівний розподіл)</td><td class="how">ПКМ → Loop Tools → Space / Relax / Circle</td><td class="note-col">Аддон. Увімкни: Preferences → Add-ons → Loop Tools <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="crease subdivision sharp edge ctrl e shift e control"><td>Crease (гострота для Subdivision)</td><td class="how">Виділи ребра → <kbd>Shift</kbd>+<kbd>E</kbd> → крутити</td><td class="note-col">1.0 = гостра без додаткових петель. Альтернатива loop cuts</td></tr>
+      <tr data-tags="face orientation normals display blue red check overlay"><td>Перевірити нормалі (візуально)</td><td class="how">Viewport Overlays → Face Orientation</td><td class="note-col">Синій = ок, Червоний = перевернута <span class="tag warn">УВАГА</span></td></tr>
+      <tr data-tags="edge slide along gg parallel constraint loop"><td>Edge Slide (ковзання)</td><td class="how"><kbd>G</kbd>+<kbd>G</kbd></td><td class="note-col">Рухає вздовж геометрії</td></tr>
+      <tr data-tags="spin array circular lathe revolve around edge"><td>Spin (кільцевий масив з ребер)</td><td class="how">Mesh → Spin</td><td class="note-col">Обертає навколо 3D Cursor. Degrees = кут</td></tr>
+      <tr data-tags="poly build draw retopo surface face click drag"><td>Poly Build (малювати меш)</td><td class="how">Toolbar → Poly Build</td><td class="note-col">Клікай на ребра і вершини — малюєш грані мишею</td></tr>
+      <tr data-tags="shrinkwrap project snap surface mesh another object"><td>Проекція на поверхню (Shrinkwrap)</td><td class="how">Modifier → Shrinkwrap → Project</td><td class="note-col">Або в Edit Mode: Snap → Project on Surface</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- MODIFIERS -->
+<div class="section visible" data-section="modifiers">
+  <div class="section-title">📦 Модифікатори</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max аналог</th><th>Blender Modifier</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="turbosmooth meshsmooth subdivide smooth subdivision surface"><td>TurboSmooth / MeshSmooth</td><td class="how">Subdivision Surface</td><td class="note-col">Simple = flat sub. Levels Render = якість фіналу</td></tr>
+      <tr data-tags="symmetry mirror half model axis clipping"><td>Symmetry</td><td class="how">Mirror</td><td class="note-col">Clipping = вершини не перетинаються. Bisect X = відрізає половину</td></tr>
+      <tr data-tags="shell solidify thickness wall offset"><td>Shell</td><td class="how">Solidify</td><td class="note-col">Even Thickness = рівна товщина на кутах</td></tr>
+      <tr data-tags="chamfer modifier bevel edge rounding angle limit"><td>Chamfer Modifier</td><td class="how">Bevel Modifier</td><td class="note-col">Limit Method = Angle → авто-фаска по куту. 30-45° = добре <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="array linear count repeat offset distance"><td>Array</td><td class="how">Array Modifier</td><td class="note-col">Object Offset = повторює відносно іншого об'єкту (кругові масиви!)</td></tr>
+      <tr data-tags="path deform along curve spline follow bend"><td>Path Deform / по кривій</td><td class="how">Curve Modifier</td><td class="note-col">Object = крива. Потрібен однаковий напрям осі</td></tr>
+      <tr data-tags="ffd lattice cage free form deform control points"><td>FFD (Free Form Deform)</td><td class="how">Lattice Modifier</td><td class="note-col">Shift+A → Lattice → Lattice modifier → Object = Lattice</td></tr>
+      <tr data-tags="boolean subtract union intersect cut combine"><td>Boolean</td><td class="how">Boolean Modifier</td><td class="note-col">Exact = повільніший, Clean. Fast = preview. <span class="tag new">НОВЕ</span> є аддон Bool Tool</td></tr>
+      <tr data-tags="prooptimizer optimize reduce decimate polygon count simplify"><td>ProOptimizer / Optimize</td><td class="how">Decimate</td><td class="note-col">Collapse: Ratio = 0.5 → вдвічі менше полігонів</td></tr>
+      <tr data-tags="displace displacement height map bump geometry"><td>Displace</td><td class="how">Displace Modifier</td><td class="note-col">Strength = сила. Потрібен UV або Generated</td></tr>
+      <tr data-tags="cloth fabric simulation physics soft dynamics"><td>Cloth</td><td class="how">Cloth (Physics Properties)</td><td class="note-col">Presets: Cotton, Silk тощо. Pin Group = закріплені вершини</td></tr>
+      <tr data-tags="bend twist taper stretch simple deform"><td>Bend / Twist / Taper</td><td class="how">Simple Deform</td><td class="note-col">Mode: Bend / Twist / Taper / Stretch</td></tr>
+      <tr data-tags="remesh voxel quad clean topology reconstruct"><td>Remesh (перебудова топології)</td><td class="how">Remesh Modifier або Ctrl+R в Sculpt Mode</td><td class="note-col">Voxel Size = деталізація. Quad = чистіші грані</td></tr>
+      <tr data-tags="shrinkwrap project snap wrap surface conform"><td>Shrinkwrap (обернути по поверхні)</td><td class="how">Shrinkwrap Modifier</td><td class="note-col">Target = поверхня. Project = проекція нормаль. Wrap = стягує</td></tr>
+      <tr data-tags="hook vertex group deform control point handle pin"><td>Hook (прив'язка вершин до Empty)</td><td class="how">Hook Modifier</td><td class="note-col">Ctrl+H в Edit Mode = прив'язати виділені вершини до Empty/кістки</td></tr>
+      <tr data-tags="skin modifier wire tube pipe skeleton bones radii"><td>Skin (по ребрах → труба)</td><td class="how">Skin Modifier</td><td class="note-col">Ctrl+A на вершині = радіус. +Subdivision Surface = гладко</td></tr>
+      <tr data-tags="smooth laplacian corrective deform relax normals"><td>Smooth / Corrective Smooth</td><td class="how">Smooth Modifier або Laplacian Smooth</td><td class="note-col">Corrective Smooth = виправляє деформації під час анімації</td></tr>
+      <tr data-tags="weld merge vertices distance seam tolerance auto"><td>Weld Modifier</td><td class="how">Weld Modifier</td><td class="note-col">Авто-зварює близькі вершини в стеку</td></tr>
+      <tr data-tags="weighted normal normals modifier shading hardsurface face strength"><td>Weighted Normal</td><td class="how">Weighted Normal Modifier</td><td class="note-col">Покращує shading hardsurface без зайвих петель <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="geometry nodes scatter procedural parametric instance distribution"><td>Geometry Nodes (процедурне)</td><td class="how">Add Modifier → Geometry Nodes</td><td class="note-col">Scatter, instance, procedural modeling. Велика окрема тема</td></tr>
+      <tr data-tags="apply collapse stack modifier ctrl a destructive"><td>Застосувати (Collapse Stack)</td><td class="how"><kbd>Ctrl</kbd>+<kbd>A</kbd> у стеку або кнопка ✓</td><td class="note-col">Незворотньо. Зроби копію перед Apply</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- UV -->
+<div class="section visible" data-section="uv">
+  <div class="section-title">🗺 UV Unwrap</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити</th><th>Як в Blender</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="uv editor workspace open texture coordinates layout"><td>Відкрити UV Editor</td><td class="how">Workspace "UV Editing" або розділи вьюпорт → UV Editor</td><td class="note-col"></td></tr>
+      <tr data-tags="unwrap seam mark u project automatic layout"><td>Розгортка (Unwrap)</td><td class="how">Edit Mode → <kbd>A</kbd> → <kbd>U</kbd> → Unwrap</td><td class="note-col">Спочатку постав Seams</td></tr>
+      <tr data-tags="mark seam cut edge split line uv boundary ctrl e"><td>Поставити Seam (лінія розрізу)</td><td class="how">Ребра → ПКМ → Mark Seam або <kbd>Ctrl</kbd>+<kbd>E</kbd> → Mark Seam</td><td class="note-col">Де ставиш Seam — там буде шов розгортки</td></tr>
+      <tr data-tags="smart uv project auto automatic unwrap fast angle"><td>Smart UV Project (авто)</td><td class="how"><kbd>U</kbd> → Smart UV Project</td><td class="note-col">Добре для архітектурних об'єктів <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="cube box projection planar map simple project"><td>Box / Cube Projection</td><td class="how"><kbd>U</kbd> → Cube Projection або Box Projection</td><td class="note-col">Як UVW Box в Max</td></tr>
+      <tr data-tags="scale uv tile texture repeat s axis editor"><td>Масштабувати UV (тайлінг)</td><td class="how">UV Editor: виділи → <kbd>S</kbd> → число</td><td class="note-col">S 2 = вдвічі більше тайлів</td></tr>
+      <tr data-tags="pack islands fill space optimize layout uv"><td>Pack Islands</td><td class="how">UV → Pack Islands</td><td class="note-col">Авто-розміщення всіх островів в UV space</td></tr>
+      <tr data-tags="pin vertex uv lock fix position p pin"><td>Pin UV вершини</td><td class="how">Виділи UV вершини → <kbd>P</kbd></td><td class="note-col">Фіксує при наступному Unwrap</td></tr>
+      <tr data-tags="live unwrap real time interactive seam adjust preview"><td>Live Unwrap</td><td class="how">UV → Live Unwrap (увімкни)</td><td class="note-col">Розгортка перераховується в реальному часі при зміні Seams</td></tr>
+      <tr data-tags="stitch uv islands connect merge V"><td>Stitch (з'єднати острови)</td><td class="how">UV Editor: виділи → <kbd>V</kbd></td><td class="note-col">Зшиває острови по спільних вершинах</td></tr>
+      <tr data-tags="follow active quads even distribute topology aligned"><td>Follow Active Quads</td><td class="how"><kbd>U</kbd> → Follow Active Quads</td><td class="note-col">Вирівнює UV по геометрії квадів. Ідеально для підлоги, стін <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="uv sync selection edit mode linked"><td>UV Sync Selection</td><td class="how">Іконка ланцюга у вьюпорті UV Editor</td><td class="note-col">Синхронізує виділення між 3D вьюпортом і UV Editor</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- MATERIALS -->
+<div class="section visible" data-section="materials">
+  <div class="section-title">🎨 Матеріали і Shader Editor</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити</th><th>Як в Blender</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="shader editor material node open workspace shading"><td>Відкрити Shader Editor</td><td class="how">Workspace "Shading" нагорі</td><td class="note-col">Або розділи вьюпорт → Shader Editor</td></tr>
+      <tr data-tags="new material create assign add slot object"><td>Новий матеріал</td><td class="how">Properties → Material (іконка кулі) → New</td><td class="note-col"></td></tr>
+      <tr data-tags="assign material face polygon multi sub id slot edit mode"><td>Матеріал на грані (Multi-Sub)</td><td class="how">Edit Mode → виділи грані → слот → Assign</td><td class="note-col">Як Multi/Sub-Object в Max</td></tr>
+      <tr data-tags="principled bsdf pbr standard base color roughness metallic normal"><td>Базовий PBR матеріал</td><td class="how">Principled BSDF (нода за замовчуванням)</td><td class="note-col">Base Color / Roughness / Metallic / Normal / Alpha <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="add texture image bitmap map shift a texture node"><td>Додати Image Texture</td><td class="how">Shader Editor: <kbd>Shift</kbd>+<kbd>A</kbd> → Texture → Image Texture</td><td class="note-col">Non-Color для Roughness/Normal/Metallic!</td></tr>
+      <tr data-tags="normal map bump tangent connect texture non-color"><td>Normal Map (правильно підключити)</td><td class="how">Image Texture (Non-Color) → Normal Map node → Normal</td><td class="note-col">Non-Color обов'язково <span class="tag warn">ВАЖЛИВО</span></td></tr>
+      <tr data-tags="texture coordinate mapping uv scale tile position rotation repeat"><td>Масштаб текстури (тайлінг)</td><td class="how">Texture Coordinate → Mapping → Image Texture</td><td class="note-col">Mapping: Scale XY = тайлінг. Rotation = поворот</td></tr>
+      <tr data-tags="hdri environment world lighting sky background opening"><td>HDRI оточення</td><td class="how">World Properties → Surface → Environment Texture → Open</td><td class="note-col"><span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="mix shader blend two materials weight factor mask alpha"><td>Змішати два матеріали</td><td class="how">Mix Shader між двома BSDF</td><td class="note-col">Fac 0–1. Texture як маска = потужно</td></tr>
+      <tr data-tags="emission glowing light self illuminate lamp led neon"><td>Emission (свічення)</td><td class="how">Principled BSDF → Emission Color + Strength</td><td class="note-col">Або окрема Emission нода <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="glass transparent refraction ior transmission cycles"><td>Скло / прозорий матеріал</td><td class="how">Principled: Transmission=1, IOR=1.45, Roughness≈0</td><td class="note-col">Тільки Cycles. В Eevee: Blend Mode = Alpha Blend <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="copy material link transfer ctrl l same share duplicate"><td>Копіювати матеріал на інший об'єкт</td><td class="how">Виділи цільові, потім джерело → <kbd>Ctrl</kbd>+<kbd>L</kbd> → Materials</td><td class="note-col"></td></tr>
+      <tr data-tags="node group ctrl g collapse compact reuse group shader"><td>Node Group (згорнути ноди)</td><td class="how">Виділи ноди → <kbd>Ctrl</kbd>+<kbd>G</kbd></td><td class="note-col">Tab = увійти / вийти. Перевикористовуй між матеріалами</td></tr>
+      <tr data-tags="node wrangler addon ctrl shift click preview socket"><td>Node Wrangler (аддон — мастхев!)</td><td class="how">Add-ons → Node Wrangler. Ctrl+Shift+Click = preview ноди</td><td class="note-col">Ctrl+T = авто TextureCoordinate+Mapping. Ctrl+Shift+T = авто PBR setup <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="principled texture setup pbr workflow ctrl shift t auto"><td>Авто PBR setup (з Node Wrangler)</td><td class="how">Виділи Principled → <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> → вибери всі текстури</td><td class="note-col">Сам підключить Base Color / Normal / Roughness / Metallic <span class="tag tip">ТІП</span></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- RENDER -->
+<div class="section visible" data-section="render">
+  <div class="section-title">🎬 Рендер (Archviz)</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити</th><th>Як в Blender</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="render f12 current frame image quick"><td>Рендер кадру</td><td class="how"><kbd>F12</kbd></td><td class="note-col">F9 = ре-рендер попереднього</td></tr>
+      <tr data-tags="render animation ctrl f12 sequence all frames"><td>Рендер анімації</td><td class="how"><kbd>Ctrl</kbd>+<kbd>F12</kbd></td><td class="note-col"></td></tr>
+      <tr data-tags="cycles eevee engine switch path tracing realtime quality"><td>Cycles vs Eevee</td><td class="how">Render Properties → Engine</td><td class="note-col">Cycles = фотореалізм. Eevee = швидкий preview <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="gpu render cuda optix nvidia performance cycles compute"><td>GPU рендер</td><td class="how">Preferences → System → Cycles → OptiX → потім Device: GPU Compute</td><td class="note-col">OptiX = NVIDIA RTX. CUDA = старіші відеокарти</td></tr>
+      <tr data-tags="samples noise quality convergence render denoiser"><td>Samples і Denoise</td><td class="how">Render Properties → Sampling → Render + Denoise</td><td class="note-col">128-512 + Denoise = відмінний результат для archviz <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="camera add create focal length fov sensor clip"><td>Налаштування камери</td><td class="how">Виділи камеру → Camera Properties</td><td class="note-col">Focal Length / Sensor / Clip Start & End (важливо!)</td></tr>
+      <tr data-tags="camera from view match current angle viewport align"><td>Камера з поточного вьюпорту</td><td class="how"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Numpad 0</kbd></td><td class="note-col">Переміщає камеру до поточного кута погляду</td></tr>
+      <tr data-tags="depth of field dof bokeh blur f-stop focus camera"><td>Depth of Field</td><td class="how">Camera Properties → Depth of Field → F-Stop</td><td class="note-col">Focus Object = автофокус на об'єкт <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="output resolution size format png jpg exr render"><td>Розмір рендеру і формат</td><td class="how">Output Properties → Resolution + File Format</td><td class="note-col">EXR = без втрат з passes. PNG = з альфа</td></tr>
+      <tr data-tags="sun light direct outdoor exterior daylight angle shadow"><td>Sun Light (сонце)</td><td class="how">Shift+A → Light → Sun → Angle = м'якість тіні</td><td class="note-col">0.5° = різкий, 5° = похмурий день <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="area light rectangle soft plane portal window"><td>Area Light (м'яке світло)</td><td class="how">Shift+A → Light → Area</td><td class="note-col">Shape: Square / Rectangle / Disk</td></tr>
+      <tr data-tags="portal window light interior hdri guide efficient"><td>Light Portal (вікна)</td><td class="how">Area Light → Light → Portal</td><td class="note-col">Ставити у вікнах інтер'єру для точнішого освітлення від HDRI <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="ies light profile photometric lumen lamp realistic"><td>IES Light Profile</td><td class="how">Light → Use Nodes → Emission → IES Texture ноду</td><td class="note-col">Реалістична фотометрія ламп</td></tr>
+      <tr data-tags="compositing post process glare bloom fog color correct vignette"><td>Post-processing (Compositor)</td><td class="how">Workspace "Compositing" → Use Nodes</td><td class="note-col">Glare / Lens Distortion / Color Balance / Vignette</td></tr>
+      <tr data-tags="render passes separate ao shadow diffuse beauty exr indirect"><td>Render Passes</td><td class="how">Render Properties → Light Paths → Passes</td><td class="note-col">Combined / Diffuse / Shadow / AO / Emission. Зберігай EXR <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="save render image save as f3 shift alt s"><td>Зберегти рендер</td><td class="how">Вікно рендеру: Image → Save As (<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd>)</td><td class="note-col"></td></tr>
+      <tr data-tags="eevee settings screen space reflections contact shadows ambient occlusion quality"><td>Eevee — покращити якість</td><td class="how">Render Properties → Screen Space Reflections + Ambient Occlusion + Contact Shadows</td><td class="note-col">Обов'язково для скла і тіней в Eevee <span class="tag warn">УВАГА</span></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- SCULPT -->
+<div class="section visible" data-section="sculpt">
+  <div class="section-title">🪨 Sculpt Mode</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити</th><th>Як в Blender</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="sculpt mode enter switch ctrl tab mode pie"><td>Увійти в Sculpt Mode</td><td class="how">Dropdown Mode або <kbd>Ctrl</kbd>+<kbd>Tab</kbd> → Sculpt</td><td class="note-col">Або клікни на назву режиму у вьюпорті</td></tr>
+      <tr data-tags="brush size radius f scroll change tool"><td>Розмір пензля</td><td class="how"><kbd>F</kbd> → drag або Scroll під час малювання</td><td class="note-col"></td></tr>
+      <tr data-tags="brush strength intensity shift f pressure"><td>Сила пензля (Strength)</td><td class="how"><kbd>Shift</kbd>+<kbd>F</kbd> → drag</td><td class="note-col"></td></tr>
+      <tr data-tags="smooth brush shift hold relax surface sculpt"><td>Smooth (розгладити)</td><td class="how">Тримай <kbd>Shift</kbd> під час малювання</td><td class="note-col">Тимчасово переключає на Smooth brush</td></tr>
+      <tr data-tags="invert brush direction ctrl subtract push pull inflate deflate"><td>Інвертувати напрям пензля</td><td class="how">Тримай <kbd>Ctrl</kbd></td><td class="note-col">Draw тиснути ↔ тягнути, Inflate ↔ Deflate тощо</td></tr>
+      <tr data-tags="draw brush basic sculpt push pull inflate"><td>Основні пензлі</td><td class="how">Toolbar або <kbd>Shift</kbd>+<kbd>Space</kbd></td><td class="note-col">Draw / Clay / Clay Strips / Inflate / Grab / Smooth / Flatten / Crease</td></tr>
+      <tr data-tags="mask paint hide protect vertices m box lasso"><td>Маска (захист від пензля)</td><td class="how"><kbd>M</kbd> = малювати маску. Box Mask / Lasso Mask</td><td class="note-col">Alt+M = очистити. Ctrl+I = інвертувати маску</td></tr>
+      <tr data-tags="face sets group color isolate paint face area"><td>Face Sets (групи граней)</td><td class="how">Toolbar → Draw Face Sets або <kbd>Ctrl</kbd>+<kbd>W</kbd></td><td class="note-col">Кольорові групи для організації sculpt. / = ізолювати</td></tr>
+      <tr data-tags="remesh voxel ctrl r clean topology rebuild resolution"><td>Voxel Remesh (перебудувати сітку)</td><td class="how"><kbd>Ctrl</kbd>+<kbd>R</kbd> в Sculpt Mode</td><td class="note-col">Voxel Size у шапці = деталізація. Менше = більше полігонів</td></tr>
+      <tr data-tags="multiresolution subdiv sculpt detail level ctrl d"><td>Multiresolution (рівні деталей)</td><td class="how">Modifier → Multiresolution → Subdivide → скульпт</td><td class="note-col">Page Up/Down = змінити рівень деталізації під час sculpt</td></tr>
+      <tr data-tags="symmetry mirror x y z axis sculpt mirror radial"><td>Симетрія в sculpt</td><td class="how">Toolbar → Symmetry → X/Y/Z</td><td class="note-col">Radial = кругова симетрія (N секцій)</td></tr>
+      <tr data-tags="dyntopo dynamic topology detail constant brush size adaptive"><td>Dynamic Topology (DynTopo)</td><td class="how">Toolbar → DynTopo → увімкнути</td><td class="note-col">Авто-додає геометрію під пензлем. Constant Detail = рівномірно</td></tr>
+      <tr data-tags="pose brush bone rig character skeleton deform limb"><td>Pose Brush (як кістки)</td><td class="how">Brush → Pose</td><td class="note-col">Деформує як IK без риггінгу. Добре для base pose</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ANIMATION -->
+<div class="section visible" data-section="anim">
+  <div class="section-title">🎞 Анімація (основи)</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити</th><th>Як в Blender</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="keyframe insert i key frame animation set"><td>Вставити Keyframe</td><td class="how"><kbd>I</kbd> → вибрати (Location / Rotation / Scale / All)</td><td class="note-col">Або ПКМ на параметрі → Insert Keyframe</td></tr>
+      <tr data-tags="delete keyframe alt i remove animation frame"><td>Видалити Keyframe</td><td class="how"><kbd>Alt</kbd>+<kbd>I</kbd></td><td class="note-col">Або ПКМ на параметрі → Delete Keyframe</td></tr>
+      <tr data-tags="play animation space timeline stop pause"><td>Відтворити / Пауза</td><td class="how"><kbd>Space</kbd></td><td class="note-col">Shift+Space = перейти до кадру 0. Ctrl+Shift+Space = playback backward</td></tr>
+      <tr data-tags="next prev frame arrow keys left right timeline navigate"><td>Попередній / Наступний кадр</td><td class="how"><kbd>←</kbd> / <kbd>→</kbd></td><td class="note-col">Shift+← / → = перейти на початок / кінець</td></tr>
+      <tr data-tags="timeline frame range start end set scene length"><td>Діапазон кадрів (Start / End)</td><td class="how">Timeline → поля Start Frame / End Frame</td><td class="note-col">Або Output Properties → Frame Range</td></tr>
+      <tr data-tags="dope sheet graph editor fcurve animation curves bezier"><td>Редагувати криві анімації</td><td class="how">Editor Type → Graph Editor або Dope Sheet</td><td class="note-col">Dope Sheet = ключі. Graph Editor = криві Bezier</td></tr>
+      <tr data-tags="auto keyframe record insert automatically red circle timeline"><td>Auto Keyframe (авто-запис)</td><td class="how">Timeline → кнопка червоного кола (Record)</td><td class="note-col">Кожна зміна параметру = автоматично вставляє ключ</td></tr>
+      <tr data-tags="interpolation easing bezier constant linear fcurve animation key"><td>Інтерполяція між ключами</td><td class="how">Graph Editor: виділи ключі → T → вибрати тип</td><td class="note-col">Bezier / Linear / Constant / Ease In/Out</td></tr>
+      <tr data-tags="camera path animation fly through walkthrough follow archviz"><td>Анімація камери (шлях)</td><td class="how">Камера → Add Constraint → Follow Path → вибрати криву</td><td class="note-col">Або просто анімуй G/R камери по ключах <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="driver expression link parameter connect control one by other"><td>Driver (зв'язати параметри)</td><td class="how">ПКМ на параметрі → Add Driver</td><td class="note-col">Як expression/wire в Max. Один параметр керує іншим</td></tr>
+      <tr data-tags="nla editor action non linear animation blend stash mix"><td>NLA Editor (Non-Linear Animation)</td><td class="how">Editor Type → NLA Editor</td><td class="note-col">Мікшування і перевикористання animation actions</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- SCENE -->
+<div class="section visible" data-section="scene">
+  <div class="section-title">🗂 Сцена і об'єкти</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити</th><th>Як в Blender</th><th>Нотатки</th></tr></thead>
+    <tbody>
+      <tr data-tags="add object primitive shift a create new mesh light camera"><td>Додати об'єкт</td><td class="how"><kbd>Shift</kbd>+<kbd>A</kbd></td><td class="note-col">Ставиться до 3D Cursor</td></tr>
+      <tr data-tags="duplicate copy shift d clone object make copy"><td>Дублювати</td><td class="how"><kbd>Shift</kbd>+<kbd>D</kbd></td><td class="note-col">ПКМ або Esc = залишить на місці</td></tr>
+      <tr data-tags="instance linked duplicate alt d reference copy shared mesh"><td>Instance (linked copy)</td><td class="how"><kbd>Alt</kbd>+<kbd>D</kbd></td><td class="note-col">Обидві змінюються при редагуванні. Економить пам'ять</td></tr>
+      <tr data-tags="group collection layer organize hierarchy ctrl g outliner m"><td>Collections (групи)</td><td class="how"><kbd>M</kbd> в Outliner або <kbd>Ctrl</kbd>+<kbd>G</kbd></td><td class="note-col">Замінюють Groups і Layers з Max</td></tr>
+      <tr data-tags="hide unhide h alt h visibility object toggle"><td>Сховати / показати</td><td class="how"><kbd>H</kbd> / <kbd>Alt</kbd>+<kbd>H</kbd></td><td class="note-col">Як в Max</td></tr>
+      <tr data-tags="freeze lock selectable disable object click cursor outliner icon"><td>Заморозити (не виділяється)</td><td class="how">Outliner → іконка курсора (вимкнути Selectable)</td><td class="note-col">Або фільтр у шапці Outliner</td></tr>
+      <tr data-tags="origin pivot point set object center geometry cursor mass"><td>Перенести Origin (Pivot)</td><td class="how">ПКМ → Set Origin → варіант</td><td class="note-col">Origin to Geometry / to Cursor / to Center of Mass</td></tr>
+      <tr data-tags="parent child hierarchy link attach ctrl p constraint"><td>Parent / Child</td><td class="how">Child → потім Parent → <kbd>Ctrl</kbd>+<kbd>P</kbd></td><td class="note-col">Keep Transform / Object тощо</td></tr>
+      <tr data-tags="link append import external file blend material object xref"><td>Link / Append (XRef аналог)</td><td class="how">File → Link (зовнішній) або Append (копія)</td><td class="note-col"></td></tr>
+      <tr data-tags="import fbx obj 3ds max format model apply transform"><td>Імпорт FBX / OBJ з Max</td><td class="how">File → Import → FBX</td><td class="note-col">У Max: Apply XForm перед export. В Blender: Apply Transform при імпорті <span class="tag warn">ВАЖЛИВО</span></td></tr>
+      <tr data-tags="undo redo ctrl z ctrl shift y history action"><td>Undo / Redo</td><td class="how"><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></td><td class="note-col">Redo = Ctrl+Shift+Z — НЕ Ctrl+Y! <span class="tag warn">УВАГА</span></td></tr>
+      <tr data-tags="search find command tool F3 action any find anything"><td>Знайти будь-яку команду</td><td class="how"><kbd>F3</kbd></td><td class="note-col">Найпотужніший інструмент! Пишеш будь-яке слово — знаходить <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="asset library browser reuse material mesh drag drop"><td>Asset Library (бібліотека)</td><td class="how">Editor Type → Asset Browser</td><td class="note-col">Drag & Drop матеріалів між файлами. Налаштуй шлях в Preferences</td></tr>
+      <tr data-tags="autosave backup recover crash lost file restore auto"><td>Відновлення після краша</td><td class="how">File → Recover → Auto Save</td><td class="note-col">Зберігає кожні 2 хв. Налаштування в Preferences → Save &amp; Load</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- RECIPES -->
+<div class="section visible" data-section="recipes">
+  <div class="section-title">🧪 Рецепти — готові рішення для archviz</div>
+  <div class="recipes-grid" id="recipesGrid">
+
+    <div class="recipe-card" data-tags="glass transparent refraction ior transmission cycles material">
+      <div class="rc-head">
+        <div class="rc-icon">🪟</div>
+        <div class="rc-title">Реалістичне скло (Cycles)</div>
+        <div class="rc-badge badge-mat">Матеріал</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Новий матеріал → Principled BSDF</span></li>
+        <li><span class="step-num">2</span><span><b>Transmission</b> = 1.0</span></li>
+        <li><span class="step-num">3</span><span><b>IOR</b> = 1.45 (звичайне скло)</span></li>
+        <li><span class="step-num">4</span><span><b>Roughness</b> = 0 (чисте) або 0.05–0.1 (матове)</span></li>
+        <li><span class="step-num">5</span><span><b>Base Color</b> = дуже темно-зелений або сірий тінт</span></li>
+        <li><span class="step-num">6</span><span>Render Engine = <b>Cycles</b> (Eevee потребує додаткових налаштувань)</span></li>
+      </ol>
+      <div class="rc-tip"><b>Порада:</b> В Eevee додатково: Render Properties → Screen Space Reflections (увімкни) + в матеріалі Blend Mode = Alpha Hashed</div>
+    </div>
+
+    <div class="recipe-card" data-tags="fabric cloth textile material texture rough soft diffuse">
+      <div class="rc-head">
+        <div class="rc-icon">🧵</div>
+        <div class="rc-title">Матеріал тканини</div>
+        <div class="rc-badge badge-mat">Матеріал</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Principled BSDF → Base Color = тканинна текстура</span></li>
+        <li><span class="step-num">2</span><span><b>Roughness</b> = 0.8–1.0 (тканина матова)</span></li>
+        <li><span class="step-num">3</span><span><b>Sheen</b> = 0.5–1.0 (крайній блиск волокон)</span></li>
+        <li><span class="step-num">4</span><span>Підключи Normal Map (тканинна фактура)</span></li>
+        <li><span class="step-num">5</span><span><b>Subsurface</b> = 0.05 (легке просвічування)</span></li>
+        <li><span class="step-num">6</span><span>Mapping: Scale 5–20x для дрібного тайлу</span></li>
+      </ol>
+      <div class="rc-tip"><b>Де брати текстури:</b> ambientcg.com, polyhaven.com — безкоштовні PBR текстури тканини</div>
+    </div>
+
+    <div class="recipe-card" data-tags="curtain drape cloth simulation pin fall gravity fabric sim">
+      <div class="rc-head">
+        <div class="rc-icon">🪟</div>
+        <div class="rc-title">Штора (Cloth Simulation)</div>
+        <div class="rc-badge badge-sim">Симуляція</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Plane → S масштабуй до розміру штори → Subdivide 20-30x</span></li>
+        <li><span class="step-num">2</span><span>Виділи верхні вершини → Vertex Group "Pin" → Assign</span></li>
+        <li><span class="step-num">3</span><span>Physics Properties → <b>Cloth</b> → Preset: Silk або Cotton</span></li>
+        <li><span class="step-num">4</span><span>Cloth → Shape → Pin Group = "Pin"</span></li>
+        <li><span class="step-num">5</span><span>Відтворити симуляцію — штора падає. Зупини на кращому кадрі</span></li>
+        <li><span class="step-num">6</span><span>Apply modifier → застосувати результат</span></li>
+      </ol>
+      <div class="rc-tip"><b>Збирає в складки:</b> Додай зверху ще 1-2 вертикальних об'єкти (стержні) як перешкоди (Cloth Collision)</div>
+    </div>
+
+    <div class="recipe-card" data-tags="floor wood parquet hardwood texture tile repeat mapping scale">
+      <div class="rc-head">
+        <div class="rc-icon">🪵</div>
+        <div class="rc-title">Паркет / Підлога</div>
+        <div class="rc-badge badge-mat">Матеріал</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Image Texture (дошки) → Mapping node → Scale X=5, Y=1 (довгі дошки)</span></li>
+        <li><span class="step-num">2</span><span>Roughness = 0.3–0.6 (лак) або 0.7–0.9 (матовий)</span></li>
+        <li><span class="step-num">3</span><span>Normal Map (деревна фактура) — підключи Non-Color!</span></li>
+        <li><span class="step-num">4</span><span>Для варіації: Noise Texture → додай до Roughness через MixRGB</span></li>
+        <li><span class="step-num">5</span><span>UV: "Follow Active Quads" для правильного напряму дощок</span></li>
+      </ol>
+      <div class="rc-tip"><b>Результат:</b> Lakований паркет з натуральною варіацією. polyhaven.com/textures → Wood</div>
+    </div>
+
+    <div class="recipe-card" data-tags="concrete wall rough diffuse bump normal variation texture archviz">
+      <div class="rc-head">
+        <div class="rc-icon">🧱</div>
+        <div class="rc-title">Бетон / Штукатурка</div>
+        <div class="rc-badge badge-mat">Матеріал</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Base Color = бетонна текстура (сірувата)</span></li>
+        <li><span class="step-num">2</span><span>Roughness Map (Non-Color) → Roughness вхід</span></li>
+        <li><span class="step-num">3</span><span>Normal Map (Non-Color) → Normal Map node → Normal</span></li>
+        <li><span class="step-num">4</span><span>Для варіації Roughness: Noise Texture (Scale=50) + MixRGB → Roughness</span></li>
+        <li><span class="step-num">5</span><span>Mapping: Scale 2–5 для правильного розміру</span></li>
+      </ol>
+      <div class="rc-tip"><b>Без текстур:</b> Principled: Base Color = RGB(0.4,0.4,0.4), Roughness = 0.9 + Bump з Noise Texture</div>
+    </div>
+
+    <div class="recipe-card" data-tags="metal brushed stainless steel polished anisotropic metallic material">
+      <div class="rc-head">
+        <div class="rc-icon">🔩</div>
+        <div class="rc-title">Метал (матовий / глянець)</div>
+        <div class="rc-badge badge-mat">Матеріал</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Principled BSDF → <b>Metallic</b> = 1.0</span></li>
+        <li><span class="step-num">2</span><span><b>Base Color</b> = колір металу (сталь = темно-сіра, золото = тепло-жовта)</span></li>
+        <li><span class="step-num">3</span><span><b>Roughness</b>: 0 = дзеркальний | 0.3 = сатин | 0.7 = матовий</span></li>
+        <li><span class="step-num">4</span><span><b>Brushed steel:</b> Anisotropic=0.7 + Noise Texture (Scale=200) → Anisotropic Rotation</span></li>
+        <li><span class="step-num">5</span><span>Normal Map (подряпини) → Normal для зносу</span></li>
+      </ol>
+      <div class="rc-tip"><b>Швидко:</b> Metallic=1, Roughness=0.3 → вже виглядає добре без текстур</div>
+    </div>
+
+    <div class="recipe-card" data-tags="led strip neon light emission bloom glow archviz lamp ceiling">
+      <div class="rc-head">
+        <div class="rc-icon">💡</div>
+        <div class="rc-title">LED стрічка / Неон</div>
+        <div class="rc-badge badge-mat">Матеріал</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Меш LED смуги → Principled BSDF → <b>Emission Color</b> = потрібний колір</span></li>
+        <li><span class="step-num">2</span><span><b>Emission Strength</b> = 5–50 (чим більше — тим яскравіше)</span></li>
+        <li><span class="step-num">3</span><span><b>Eevee:</b> Render Properties → Bloom → увімкнути → Intensity = 0.05</span></li>
+        <li><span class="step-num">4</span><span><b>Cycles:</b> Emission матеріал реально освітлює сцену</span></li>
+        <li><span class="step-num">5</span><span>Окремо: додай Area Light поруч з той самий колір для чіткого освітлення</span></li>
+      </ol>
+      <div class="rc-tip"><b>Хак:</b> Light Path node → Is Camera Ray → MixShader: камера бачить яскраве, рендер освітлює реально</div>
+    </div>
+
+    <div class="recipe-card" data-tags="interior lighting setup hdri ambient sunlight archviz room indoor window">
+      <div class="rc-head">
+        <div class="rc-icon">🏠</div>
+        <div class="rc-title">Освітлення інтер'єру</div>
+        <div class="rc-badge badge-light">Освітлення</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>World → HDRI (денне небо або студія) — дає м'яке заповнення</span></li>
+        <li><span class="step-num">2</span><span>У кожному вікні — Area Light → Light → Portal (тільки Cycles)</span></li>
+        <li><span class="step-num">3</span><span>Sun Light через вікно — Angle = 1-2°, Strength = 3–8</span></li>
+        <li><span class="step-num">4</span><span>Штучне світло: Area/Point/Spot з IES профілем або Emission mesh</span></li>
+        <li><span class="step-num">5</span><span>Samples: 256–512 + Denoise = достатньо</span></li>
+      </ol>
+      <div class="rc-tip"><b>Загальна проблема:</b> темно у кутах — збільш HDRI Strength або додай weak Fill Area light</div>
+    </div>
+
+    <div class="recipe-card" data-tags="exterior lighting outdoor archviz sun hdri sky atmosphere facade building">
+      <div class="rc-head">
+        <div class="rc-icon">🏢</div>
+        <div class="rc-title">Освітлення екстер'єру</div>
+        <div class="rc-badge badge-light">Освітлення</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>World → Environment Texture → HDRI неба (hdri-haven.com)</span></li>
+        <li><span class="step-num">2</span><span>Sun Light: Strength = 3–6, Angle = 0.5° (чіткі тіні)</span></li>
+        <li><span class="step-num">3</span><span>Поверни Sun і HDRI в одному напрямку (Mapping → Rotation Y)</span></li>
+        <li><span class="step-num">4</span><span>World Strength = 0.3–0.8 (підсвічування від неба)</span></li>
+        <li><span class="step-num">5</span><span>Cycles: 128-256 samples + Denoise. Render Time = 1-3 хв</span></li>
+      </ol>
+      <div class="rc-tip"><b>Золота година:</b> HDRI захід + Sun Strength=1, теплий колір #FFD580, Angle=2°</div>
+    </div>
+
+    <div class="recipe-card" data-tags="scatter grass stones objects distribute particles geometry nodes instance">
+      <div class="rc-head">
+        <div class="rc-icon">🌿</div>
+        <div class="rc-title">Розсіяти об'єкти (трава, камені)</div>
+        <div class="rc-badge badge-model">Геометрія</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Виділи поверхню → Properties → Particles → +</span></li>
+        <li><span class="step-num">2</span><span>Type = <b>Hair</b>, Advanced = увімкнути</span></li>
+        <li><span class="step-num">3</span><span>Render → Render As = <b>Object</b> → Instance Object = твій об'єкт</span></li>
+        <li><span class="step-num">4</span><span>Number = кількість. Scale / Scale Randomness для варіації</span></li>
+        <li><span class="step-num">5</span><span>Rotation → рандомізуй для природнього вигляду</span></li>
+      </ol>
+      <div class="rc-tip"><b>Краще:</b> Geometry Nodes → Distribute Points on Faces → Instance on Points. Більш гнучко і швидко</div>
+    </div>
+
+    <div class="recipe-card" data-tags="water ocean pool liquid transparent material waves">
+      <div class="rc-head">
+        <div class="rc-icon">💧</div>
+        <div class="rc-title">Вода / Басейн</div>
+        <div class="rc-badge badge-mat">Матеріал</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Principled BSDF: <b>Transmission</b>=1, <b>IOR</b>=1.33, Roughness=0</span></li>
+        <li><span class="step-num">2</span><span>Base Color = дуже темно-синій або cyan (0.01, 0.05, 0.08)</span></li>
+        <li><span class="step-num">3</span><span>Хвилі: Modifier → <b>Ocean</b> (або Displacement з Wave Texture)</span></li>
+        <li><span class="step-num">4</span><span>Cycles only. Eevee = Screen Space Reflections + Alpha Hashed</span></li>
+        <li><span class="step-num">5</span><span>Caustics: Render Properties → Light Paths → Caustics (повільно але красиво)</span></li>
+      </ol>
+      <div class="rc-tip"><b>Пул:</b> Тонкий Plane з матеріалом Water + Ocean modifier зі Scale=0.01</div>
+    </div>
+
+    <div class="recipe-card" data-tags="leaves plant alpha cutout transparency card billboard vegetation">
+      <div class="rc-head">
+        <div class="rc-icon">🌳</div>
+        <div class="rc-title">Рослини / Листя (Alpha cutout)</div>
+        <div class="rc-badge badge-mat">Матеріал</div>
+      </div>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Principled BSDF: Base Color = текстура листа (PNG з альфа)</span></li>
+        <li><span class="step-num">2</span><span>Image Texture → Alpha вихід → <b>Alpha</b> вхід Principled</span></li>
+        <li><span class="step-num">3</span><span>Material Properties → Settings → <b>Blend Mode</b> = Alpha Clip</span></li>
+        <li><span class="step-num">4</span><span>Shadow Mode = Alpha Clip (для правильних тіней)</span></li>
+        <li><span class="step-num">5</span><span>Roughness = 0.7–0.9. Subsurface = 0.1 (просвічування листа)</span></li>
+      </ol>
+      <div class="rc-tip"><b>Subsurface колір:</b> зелений тінт для реалістичного просвічування сонячного світла</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- WTF -->
+<div class="section visible" data-section="wtf">
+  <div class="section-title">🤯 WTF — найчастіші проблеми максівця в Blender</div>
+  <div class="wtf-list" id="wtfList">
+
+    <div class="wtf-card" data-tags="black dark object normals join flip wrong render">
+      <div class="wtf-problem">
+        <div class="wtf-q">Об'єкт чорний після Join або import</div>
+        <div class="wtf-a">Перевернуті нормалі. Edit Mode → <kbd>Alt</kbd>+<kbd>N</kbd> → Recalculate Outside (<kbd>Shift</kbd>+<kbd>N</kbd>). Або Viewport Overlays → <b>Face Orientation</b> — червоне = перевернуто.</div>
+      </div>
+    </div>
+
+    <div class="wtf-card" data-tags="boolean ugly messy topology bad result artifact intersection">
+      <div class="wtf-q">Boolean дає жахливу топологію</div>
+      <div class="wtf-a">У Boolean Modifier переключи <b>Solver = Exact</b> (замість Fast). Ще: обидва меші повинні мати правильні нормалі і не перетинатися до boolean. Аддон <b>Bool Tool</b> (вбудований) полегшує роботу.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="redo ctrl y wrong shortcut shift z undo redo">
+      <div class="wtf-q">Ctrl+Y не робить Redo</div>
+      <div class="wtf-a">В Blender Redo = <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd>. Ctrl+Y не працює. М'язова пам'ять з Max — найбільша засідка на першому тижні.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="glass black not rendering invisible transparent cycles eevee">
+      <div class="wtf-q">Скло рендериться чорним</div>
+      <div class="wtf-a">1) Переконайся що Engine = <b>Cycles</b> (Eevee потребує окремих налаштувань). 2) Render Properties → Light Paths → Max Bounces: Transmission = мін 8. 3) В Eevee: Render Properties → Screen Space Reflections → увімкнути + Blend Mode в матеріалі = Alpha Hashed.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="texture not showing missing uv unwrap purple no mapping coordinates">
+      <div class="wtf-q">Текстура не відображається (суцільний колір)</div>
+      <div class="wtf-a">Немає UV розгортки або неправильні координати. 1) Edit Mode → <kbd>A</kbd> → <kbd>U</kbd> → Smart UV Project (швидке рішення). 2) Або в нодах: Texture Coordinate → <b>Generated</b> → Mapping → Image Texture (без UV).</div>
+    </div>
+
+    <div class="wtf-card" data-tags="scale modifier wrong behave weird distort apply ctrl a xform">
+      <div class="wtf-q">Modifier (Bevel, Solidify, Cloth) поводиться дивно / нерівномірно</div>
+      <div class="wtf-a">Не застосований Scale. <kbd>Ctrl</kbd>+<kbd>A</kbd> → <b>Apply All Transforms</b>. Це як Reset XForm в Max — обов'язково після масштабування. Особливо важливо для Cloth і фізики.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="object lost missing outliner hidden find disappeared where">
+      <div class="wtf-q">Об'єкт зник, не можу знайти</div>
+      <div class="wtf-a">1) <kbd>Alt</kbd>+<kbd>H</kbd> = показати все. 2) Відкрий Outliner — можливо в іншій Collection. 3) <kbd>A</kbd> щоб виділити все що видно. 4) Header Outliner → фільтр → увімкни All Visibility щоб бачити всі об'єкти.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="subdivision sharp wrong crease loop cuts ugly smooth turbosmooth">
+      <div class="wtf-q">Subdivision Surface деформує модель — стає "кашею"</div>
+      <div class="wtf-a">Потрібно контролювати subdivision. Два способи: 1) Додай supporting loop cuts (<kbd>Ctrl</kbd>+<kbd>R</kbd>) поруч з гострими ребрами. 2) Виділи ребра → <kbd>Shift</kbd>+<kbd>E</kbd> → 1.0 (Crease = гостро без loop cuts). Другий спосіб краще для hardsurface.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="render noisy grainy snow bad quality dark samples">
+      <div class="wtf-q">Рендер шумний як сніг</div>
+      <div class="wtf-a">1) Збільш Samples (Render Properties → Sampling → Render: спробуй 256-512). 2) Увімкни <b>Denoise</b> (OptiX якщо NVIDIA, OpenImageDenoise для CPU) — прибирає шум при меншій кількості samples. 3) Перевір що Source Light достатньо яскравий.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="eevee shadow wrong no contact shadows quality fake">
+      <div class="wtf-q">В Eevee немає тіней від маленьких об'єктів</div>
+      <div class="wtf-a">Render Properties → <b>Contact Shadows</b> → увімкнути. Також перевір кожне світло → Light Properties → Shadow → увімкнено. Contact Shadows вирішують ближні дрібні тіні яких Eevee не вираховує за замовчуванням.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="right click confirm cancel wrong behavior max different">
+      <div class="wtf-q">Натиснув ПКМ — і все скасувалось</div>
+      <div class="wtf-a">В Blender ПКМ = Cancel операції (протилежно від Max!). Підтвердити = <kbd>Enter</kbd> або <kbd>Left Click</kbd>. Esc теж скасовує. М'язова пам'ять — тиждень і звикнеш.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="origin pivot wrong rotation off center scale wrong point">
+      <div class="wtf-q">Об'єкт обертається або масштабується не з центру</div>
+      <div class="wtf-a">Невірно розміщений Origin (pivot). ПКМ → Set Origin → <b>Origin to Geometry</b>. Або переміщуй Origin окремо: Edit Mode → виділи потрібну вершину → Object → Set Origin → Origin to Selected.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="fbx import wrong scale too big small 100x transform apply">
+      <div class="wtf-q">FBX з Max імпортується в 100x більшому масштабі</div>
+      <div class="wtf-a">При Export з Max: перевір Units = Centimeters і Apply Scale. При Import в Blender: FBX → Settings → <b>Apply Transform</b> → увімкнути. Або після імпорту: <kbd>Ctrl</kbd>+<kbd>A</kbd> → Apply All Transforms.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="modifier cannot apply edit mode grayed out not available">
+      <div class="wtf-q">Modifier не можна застосувати (кнопка Apply сіра)</div>
+      <div class="wtf-a">Ти в Edit Mode. Apply доступний тільки в <b>Object Mode</b>. Натисни <kbd>Tab</kbd> щоб вийти з Edit Mode → тоді Apply.</div>
+    </div>
+
+    <div class="wtf-card" data-tags="principled bsdf texture auto setup node wrangler ctrl shift t">
+      <div class="wtf-q">Кожного разу вручну підключати всі текстурні ноди?</div>
+      <div class="wtf-a">Встанови аддон <b>Node Wrangler</b> (вбудований, тільки увімкни в Preferences → Add-ons). Виділи Principled BSDF → <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>T</kbd> → вибери всі файли текстур → сам підключить Base Color / Normal / Roughness / Metallic правильно.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- KEYS -->
+<div class="section visible" data-section="keys">
+  <div class="section-title">⌨️ Клавіші Blender — що де натискати</div>
+
+  <!-- Mode toggle -->
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+    <button class="mode-btn active" data-mode="obj">Object Mode</button>
+    <button class="mode-btn" data-mode="edit">Edit Mode</button>
+    <button class="mode-btn" data-mode="sculpt">Sculpt Mode</button>
+  </div>
+
+  <!-- Keyboard -->
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px">
+    <div id="kb" style="display:inline-flex;flex-direction:column;gap:5px;min-width:680px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:12px"></div>
+  </div>
+
+  <!-- Legend -->
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px">
+    <span class="kl" style="--c:#4f7cff">Трансформ (G/R/S)</span>
+    <span class="kl" style="--c:#e3b341">Виділення</span>
+    <span class="kl" style="--c:#bc8cff">Режим / Вид</span>
+    <span class="kl" style="--c:#f0883e">Моделювання (Edit)</span>
+    <span class="kl" style="--c:#3fb950">Object ops</span>
+    <span class="kl" style="--c:#f85149">Delete</span>
+    <span class="kl" style="--c:#8b949e">UI / Інше</span>
+  </div>
+
+  <!-- Combos -->
+  <div class="section-title" style="margin-top:24px">Комбінації (Ctrl / Shift / Alt)</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Комбінація</th><th>Де</th><th>Що робить</th></tr></thead>
+    <tbody>
+      <tr data-tags="shift a add object primitive create"><td><kbd>Shift</kbd>+<kbd>A</kbd></td><td class="how">Скрізь</td><td class="note-col">Додати об'єкт / ноду / кістку</td></tr>
+      <tr data-tags="shift d duplicate copy object"><td><kbd>Shift</kbd>+<kbd>D</kbd></td><td class="how">Object / Edit</td><td class="note-col">Дублювати</td></tr>
+      <tr data-tags="alt d instance linked copy duplicate"><td><kbd>Alt</kbd>+<kbd>D</kbd></td><td class="how">Object Mode</td><td class="note-col">Instance (linked duplicate)</td></tr>
+      <tr data-tags="ctrl z undo history"><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td class="how">Скрізь</td><td class="note-col">Undo</td></tr>
+      <tr data-tags="ctrl shift z redo y undo redo"><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd></td><td class="how">Скрізь</td><td class="note-col">Redo (НЕ Ctrl+Y!)</td></tr>
+      <tr data-tags="ctrl a apply transform scale rotation xform"><td><kbd>Ctrl</kbd>+<kbd>A</kbd></td><td class="how">Object Mode</td><td class="note-col">Apply Transform (як Reset XForm)</td></tr>
+      <tr data-tags="ctrl j join attach combine objects merge"><td><kbd>Ctrl</kbd>+<kbd>J</kbd></td><td class="how">Object Mode</td><td class="note-col">Join об'єкти (як Attach)</td></tr>
+      <tr data-tags="ctrl p parent child hierarchy link"><td><kbd>Ctrl</kbd>+<kbd>P</kbd></td><td class="how">Object Mode</td><td class="note-col">Parent (прив'язати дочірній)</td></tr>
+      <tr data-tags="ctrl r loop cut insert edge ring add"><td><kbd>Ctrl</kbd>+<kbd>R</kbd></td><td class="how">Edit Mode</td><td class="note-col">Loop Cut (вставити петлю)</td></tr>
+      <tr data-tags="ctrl b bevel chamfer fillet edge segments"><td><kbd>Ctrl</kbd>+<kbd>B</kbd></td><td class="how">Edit Mode</td><td class="note-col">Bevel / Chamfer ребер (Scroll = сегменти)</td></tr>
+      <tr data-tags="ctrl shift b bevel vertex corner"><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd></td><td class="how">Edit Mode</td><td class="note-col">Bevel вершини</td></tr>
+      <tr data-tags="ctrl e edge menu bridge mark seam"><td><kbd>Ctrl</kbd>+<kbd>E</kbd></td><td class="how">Edit Mode</td><td class="note-col">Edge меню (Bridge, Mark Seam тощо)</td></tr>
+      <tr data-tags="ctrl f face menu grid fill"><td><kbd>Ctrl</kbd>+<kbd>F</kbd></td><td class="how">Edit Mode</td><td class="note-col">Face меню (Grid Fill, Poke, тощо)</td></tr>
+      <tr data-tags="shift e crease edge sharp subdivision control"><td><kbd>Shift</kbd>+<kbd>E</kbd></td><td class="how">Edit Mode</td><td class="note-col">Crease (гострота для Subdivision)</td></tr>
+      <tr data-tags="ctrl x dissolve edge remove keep topology"><td><kbd>Ctrl</kbd>+<kbd>X</kbd></td><td class="how">Edit Mode</td><td class="note-col">Dissolve (видалити без дірки)</td></tr>
+      <tr data-tags="ctrl m mirror flip axis object"><td><kbd>Ctrl</kbd>+<kbd>M</kbd></td><td class="how">Object / Edit</td><td class="note-col">Mirror по осі</td></tr>
+      <tr data-tags="ctrl i invert selection inverse"><td><kbd>Ctrl</kbd>+<kbd>I</kbd></td><td class="how">Object / Edit</td><td class="note-col">Інвертувати виділення</td></tr>
+      <tr data-tags="shift n recalculate normals outside"><td><kbd>Shift</kbd>+<kbd>N</kbd></td><td class="how">Edit Mode</td><td class="note-col">Recalculate Normals назовні</td></tr>
+      <tr data-tags="alt n flip normals inside outside menu"><td><kbd>Alt</kbd>+<kbd>N</kbd></td><td class="how">Edit Mode</td><td class="note-col">Normals меню (Flip, Recalculate тощо)</td></tr>
+      <tr data-tags="alt a deselect all none clear"><td><kbd>Alt</kbd>+<kbd>A</kbd></td><td class="how">Object / Edit</td><td class="note-col">Deselect All</td></tr>
+      <tr data-tags="alt h show unhide all hidden objects"><td><kbd>Alt</kbd>+<kbd>H</kbd></td><td class="how">Object / Edit</td><td class="note-col">Показати все сховане</td></tr>
+      <tr data-tags="alt z xray toggle see through inside"><td><kbd>Alt</kbd>+<kbd>Z</kbd></td><td class="how">Вьюпорт</td><td class="note-col">X-Ray режим (бачити крізь)</td></tr>
+      <tr data-tags="alt s shrink fatten normals inflate deflate"><td><kbd>Alt</kbd>+<kbd>S</kbd></td><td class="how">Edit Mode</td><td class="note-col">Inflate/Deflate по нормалях</td></tr>
+      <tr data-tags="shift s snap cursor selection menu pie"><td><kbd>Shift</kbd>+<kbd>S</kbd></td><td class="how">Скрізь</td><td class="note-col">Snap меню (Cursor to Selected тощо)</td></tr>
+      <tr data-tags="g g edge slide along geometry gg double"><td><kbd>G</kbd>+<kbd>G</kbd></td><td class="how">Edit Mode</td><td class="note-col">Edge Slide (ковзання вздовж геометрії)</td></tr>
+      <tr data-tags="ctrl alt q quad view four viewports split panels"><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Q</kbd></td><td class="how">Вьюпорт</td><td class="note-col">Quad View (4 вьюпорти)</td></tr>
+      <tr data-tags="ctrl alt numpad 0 camera from view align"><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Num0</kbd></td><td class="how">Вьюпорт</td><td class="note-col">Перемістити камеру до поточного виду</td></tr>
+      <tr data-tags="shift space brush tool pie menu sculpt paint"><td><kbd>Shift</kbd>+<kbd>Space</kbd></td><td class="how">Sculpt/Paint</td><td class="note-col">Вибрати пензель (Brush pie)</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ADDONS -->
+<div class="section visible" data-section="addons">
+  <div class="section-title">🧩 Аддони — що встановити</div>
+
+  <div class="section-title" style="margin-top:0;margin-bottom:8px;color:var(--green)">Вбудовані (тільки увімкнути в Preferences → Add-ons)</div>
+  <div class="table-wrap" style="margin-bottom:20px"><table>
+    <thead><tr><th>Аддон</th><th>Що дає</th><th>Як використовувати</th></tr></thead>
+    <tbody>
+      <tr data-tags="loop tools relax space circle flatten edges built-in"><td><b>Loop Tools</b></td><td class="how">Relax, Space, Circle, Flatten для ребер і вершин</td><td class="note-col">ПКМ → Loop Tools. Незамінний для чистої топології <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="node wrangler shader material texture ctrl shift t auto pbr"><td><b>Node Wrangler</b></td><td class="how">Ctrl+Shift+Click = preview ноди. Ctrl+T = авто Mapping. Ctrl+Shift+T = авто PBR</td><td class="note-col">Обов'язковий для роботи з матеріалами <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="bool tool boolean subtract union easier faster workflow"><td><b>Bool Tool</b></td><td class="how">Швидший boolean workflow через Ctrl+Shift+B</td><td class="note-col">Toolbar → Bool Tool або хоткеї. Замінює ручне додавання Boolean modifier</td></tr>
+      <tr data-tags="archimesh room wall door window stair archviz building generator"><td><b>Archimesh</b></td><td class="how">Генератор кімнат, стін, дверей, вікон, сходів, колон</td><td class="note-col">N-Panel → Create → Room/Objects. Ідеально для archviz <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="measureit dimension annotation measurement ruler label"><td><b>MeasureIt</b></td><td class="how">Розміри та анотації прямо у вьюпорті</td><td class="note-col">N-Panel → MeasureIt. Для перевірки масштабу архітектурних об'єктів</td></tr>
+      <tr data-tags="extra objects mesh add primitives extra shapes torus knot math"><td><b>Extra Objects (Mesh)</b></td><td class="how">Додаткові примітиви: Torus Knot, Gem, Round Cube тощо</td><td class="note-col">Shift+A → Mesh → більше опцій</td></tr>
+      <tr data-tags="import export fbx obj format max interchange"><td><b>FBX / OBJ Import-Export</b></td><td class="how">Обмін файлами з 3DS Max та іншими</td><td class="note-col">Зазвичай вже активовані. File → Import/Export</td></tr>
+      <tr data-tags="viewport pie menus mode pie radial quick access custom"><td><b>Viewport Pie Menus</b></td><td class="how">Додаткові pie меню для швидкого доступу</td><td class="note-col">Розширює Z, Tab, тощо</td></tr>
+      <tr data-tags="rigify rig auto rigging skeleton bones character animation"><td><b>Rigify</b></td><td class="how">Авто-генерація риггу для персонажів</td><td class="note-col">Тільки якщо займаєшся анімацією персонажів</td></tr>
+      <tr data-tags="3d print toolbox check mesh solid manifold errors repair"><td><b>3D Print Toolbox</b></td><td class="how">Перевірка меша на помилки (non-manifold, intersections)</td><td class="note-col">Корисно і для чистки геометрії не тільки для друку</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-bottom:8px;color:var(--accent)">Безкоштовні сторонні аддони</div>
+  <div class="table-wrap" style="margin-bottom:20px"><table>
+    <thead><tr><th>Аддон</th><th>Що дає</th><th>Де взяти</th></tr></thead>
+    <tbody>
+      <tr data-tags="blenderkit online library material hdri model free download"><td><b>BlenderKit</b></td><td class="how">Онлайн бібліотека матеріалів, моделей, HDRI — частина безкоштовно</td><td class="note-col">blenderkit.com → Download Addon <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="hdri sun aligner align sun light hdri shadow match direction"><td><b>HDRI Sun Aligner</b></td><td class="how">Авто-вирівнює Sun Light по HDRI (правильний напрям тіней)</td><td class="note-col">GitHub: akej74/hdri-sun-aligner <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="cats blender addon vrc vrchat import fbx cleanup rig"><td><b>CATS Blender Plugin</b></td><td class="how">Оптимізація і чистка FBX ігрових моделей</td><td class="note-col">Якщо імпортуєш для реального часу</td></tr>
+      <tr data-tags="mesh check analyse geometry analyzer statistics select"><td><b>Mesh Analysis (вбудований)</b></td><td class="how">Теплова карта: distortion, overhang, thickness прямо у вьюпорті</td><td class="note-col">Viewport Overlays → Mesh Analysis</td></tr>
+      <tr data-tags="simple lattice control points ffd quick deform wrap"><td><b>Simple Lattice</b></td><td class="how">Швидко обертає Lattice (FFD) навколо виділеного об'єкту</td><td class="note-col">GitHub, пошук "blender simple lattice addon"</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-bottom:8px;color:var(--orange)">Платні (але варті для archviz)</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Аддон</th><th>Що дає</th><th>Ціна / де</th></tr></thead>
+    <tbody>
+      <tr data-tags="botaniq plant tree grass vegetation library scatter archviz outdoor"><td><b>Botaniq</b></td><td class="how">Велика бібліотека рослин: дерева, кущі, трава — фотореалістичні</td><td class="note-col">blendermarket.com ~$90. Варто для outdoor archviz <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="scatter geo scatter vegetation instances distribute surface grass stones"><td><b>Scatter (Biome Reader)</b></td><td class="how">Потужний scatter рослин і об'єктів по поверхні</td><td class="note-col">blendermarket.com ~$40-90 <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="building tools architecture parametric wall room door window generator"><td><b>Building Tools</b></td><td class="how">Параметрична архітектура: будівлі, поверхи, вікна</td><td class="note-col">blendermarket.com ~$25</td></tr>
+      <tr data-tags="real camera physical photography settings aperture shutter iso"><td><b>Real Camera</b></td><td class="how">Фізичні налаштування камери (діафрагма, ISO, витримка)</td><td class="note-col">blendermarket.com ~$10-20 <span class="tag arch">ARCHVIZ</span></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- CONCEPTS -->
+<div class="section visible" data-section="concepts">
+  <div class="section-title">💡 Концепції — як Blender думає інакше від 3DS Max</div>
+  <div class="recipes-grid">
+
+    <div class="recipe-card" data-tags="data block mesh object shared multiple instances concept">
+      <div class="rc-head"><div class="rc-icon">🗂</div><div class="rc-title">Object ≠ Mesh Data</div></div>
+      <ol class="steps">
+        <li><span class="step-num">!</span><span>В Blender <b>Object</b> — це контейнер (позиція, ротація, масштаб). <b>Mesh</b> — це геометрія всередині.</span></li>
+        <li><span class="step-num">!</span><span>Один і той самий Mesh може бути у <b>декількох об'єктах</b> — зміна одного = зміна всіх (як Instance).</span></li>
+        <li><span class="step-num">!</span><span>Це поясняє чому Alt+D (instance) ≠ Shift+D (копія з новим мешем).</span></li>
+      </ol>
+      <div class="rc-tip"><b>Аналог в Max:</b> Object Reference / Instance замість Group</div>
+    </div>
+
+    <div class="recipe-card" data-tags="origin pivot point center not center mass position rotation scale concept">
+      <div class="rc-head"><div class="rc-icon">🎯</div><div class="rc-title">Origin — не центр об'єкту</div></div>
+      <ol class="steps">
+        <li><span class="step-num">!</span><span><b>Origin</b> (помаранчева крапка) = точка відліку, обертання, масштабу.</span></li>
+        <li><span class="step-num">!</span><span>Origin може бути де завгодно — і в геометрії, і за її межами.</span></li>
+        <li><span class="step-num">!</span><span>Якщо об'єкт обертається "не з того місця" → ПКМ → Set Origin → Origin to Geometry.</span></li>
+      </ol>
+      <div class="rc-tip"><b>Аналог в Max:</b> Pivot Point, але більш явний і ручний</div>
+    </div>
+
+    <div class="recipe-card" data-tags="modifier stack non destructive always editable adjust parameters concept">
+      <div class="rc-head"><div class="rc-icon">📦</div><div class="rc-title">Modifier Stack завжди non-destructive</div></div>
+      <ol class="steps">
+        <li><span class="step-num">!</span><span>В Blender всі modifier <b>ніколи не змінюють оригінальний меш</b> — завжди можна повернутись.</span></li>
+        <li><span class="step-num">!</span><span>Це як в Max якщо ніколи не "Collapse Stack" — але тут це норма.</span></li>
+        <li><span class="step-num">!</span><span>Apply modifier = незворотньо. Роби це тільки коли дійсно потрібно.</span></li>
+      </ol>
+      <div class="rc-tip"><b>Перевага:</b> Можна змінити параметри Bevel, TurboSmooth, Array у будь-який момент</div>
+    </div>
+
+    <div class="recipe-card" data-tags="collections layers groups hierarchy organize visibility render concept">
+      <div class="rc-head"><div class="rc-icon">🗃</div><div class="rc-title">Collections замінюють Layers і Groups</div></div>
+      <ol class="steps">
+        <li><span class="step-num">!</span><span><b>Collections</b> = гібрид Layers + Groups з Max.</span></li>
+        <li><span class="step-num">!</span><span>Один об'єкт може бути в <b>декількох</b> Collections одночасно.</span></li>
+        <li><span class="step-num">!</span><span>Можна вмикати/вимикати видимість в Outliner і навіть виключати з рендеру.</span></li>
+        <li><span class="step-num">!</span><span>View Layer = що потрапляє в рендер (Multiple Render Passes workflow).</span></li>
+      </ol>
+      <div class="rc-tip"><b>Практично:</b> M = перенести в Collection. Натисни іконку ока/камери в Outliner для контролю</div>
+    </div>
+
+    <div class="recipe-card" data-tags="modes tab object edit sculpt paint weight context aware hotkeys concept">
+      <div class="rc-head"><div class="rc-icon">🔀</div><div class="rc-title">Все залежить від Mode (режиму)</div></div>
+      <ol class="steps">
+        <li><span class="step-num">!</span><span>В Blender хоткеї <b>змінюють сенс</b> залежно від режиму.</span></li>
+        <li><span class="step-num">!</span><span>Tab = переключитись між Object і Edit. Одна клавіша змінює всесвіт.</span></li>
+        <li><span class="step-num">!</span><span>Е в Object Mode = нічого. Е в Edit Mode = Extrude. Е в Sculpt = (нічого).</span></li>
+        <li><span class="step-num">!</span><span>Ctrl+Tab = Pie меню всіх режимів (Object / Edit / Sculpt / Paint / etc.)</span></li>
+      </ol>
+      <div class="rc-tip"><b>Звикнути:</b> Завжди дивись на верхній лівий кут вьюпорту — там написано поточний режим</div>
+    </div>
+
+    <div class="recipe-card" data-tags="3d cursor anchor pivot placement origin new objects position concept">
+      <div class="rc-head"><div class="rc-icon">🎯</div><div class="rc-title">3D Cursor — якір сцени</div></div>
+      <ol class="steps">
+        <li><span class="step-num">!</span><span><b>3D Cursor</b> (хрестик з кільцем) = місце де з'являються нові об'єкти.</span></li>
+        <li><span class="step-num">!</span><span>Shift+ПКМ = поставити курсор. Shift+S = меню snap (Cursor to Selected, to World Origin тощо).</span></li>
+        <li><span class="step-num">!</span><span>Можна обертати і масштабувати відносно 3D Cursor (Pivot Point = 3D Cursor).</span></li>
+      </ol>
+      <div class="rc-tip"><b>Аналог в Max:</b> Щось між Grid і Helper Point, але значно потужніше</div>
+    </div>
+
+    <div class="recipe-card" data-tags="right click cancel confirm left click max different behavior concept">
+      <div class="rc-head"><div class="rc-icon">🖱</div><div class="rc-title">ПКМ = Cancel (не підтвердити!)</div></div>
+      <ol class="steps">
+        <li><span class="step-num">!</span><span>В Blender: <b>ПКМ = скасувати</b> поточну операцію.</span></li>
+        <li><span class="step-num">!</span><span>Підтвердити = <b>Enter</b> або <b>ЛКМ</b>.</span></li>
+        <li><span class="step-num">!</span><span>Це протилежно від 3DS Max де ПКМ = підтвердити.</span></li>
+        <li><span class="step-num">!</span><span>Тиждень — і звикнеш. До цього — Ctrl+Z після помилок.</span></li>
+      </ol>
+      <div class="rc-tip"><b>Лайфхак:</b> Якщо зробив дурницю — завжди Ctrl+Z. Undo в Blender дуже надійний</div>
+    </div>
+
+    <div class="recipe-card" data-tags="materials data block shared link one material many objects concept">
+      <div class="rc-head"><div class="rc-icon">🎨</div><div class="rc-title">Матеріали — теж Data Blocks</div></div>
+      <ol class="steps">
+        <li><span class="step-num">!</span><span>Матеріали — теж Data Blocks. Один матеріал може бути на <b>сотнях об'єктів</b>.</span></li>
+        <li><span class="step-num">!</span><span>Зміна матеріалу = зміна на всіх об'єктах де він використовується.</span></li>
+        <li><span class="step-num">!</span><span>Ctrl+L → Materials = скопіювати матеріал з одного об'єкта на всі виділені.</span></li>
+        <li><span class="step-num">!</span><span>Матеріал без юзерів (0 users) видаляється при закритті файлу.</span></li>
+      </ol>
+      <div class="rc-tip"><b>Аналог в Max:</b> Material Library + Multi/Sub-Object але вбудовано в систему</div>
+    </div>
+
+    <div class="recipe-card" data-tags="node based material shader compositor geometry procedural concept visual">
+      <div class="rc-head"><div class="rc-icon">🔗</div><div class="rc-title">Все на нодах — матеріали, рендер, геометрія</div></div>
+      <ol class="steps">
+        <li><span class="step-num">!</span><span>Blender використовує <b>нодову систему</b> для матеріалів, compositor, geometry nodes.</span></li>
+        <li><span class="step-num">!</span><span>Спочатку лякає. Але дає <b>повний контроль</b> — будь-яка текстура + маска + мікс можливі.</span></li>
+        <li><span class="step-num">!</span><span>Shift+A = додати ноду. Ctrl+Shift+Click = preview ноди (Node Wrangler).</span></li>
+        <li><span class="step-num">!</span><span>Node Group (Ctrl+G) = згорнути в one компонент і перевикористовувати.</span></li>
+      </ol>
+      <div class="rc-tip"><b>Для archviz:</b> Node Wrangler + Ctrl+Shift+T = авто-підключення всіх PBR текстур за 5 секунд</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RESOURCES -->
+<div class="section visible" data-section="resources">
+  <div class="section-title">🔗 Ресурси — де брати все безкоштовно</div>
+
+  <div class="section-title" style="margin-top:0;margin-bottom:8px;color:var(--green)">HDRI (фони та освітлення)</div>
+  <div class="table-wrap" style="margin-bottom:20px"><table>
+    <thead><tr><th>Сайт</th><th>Що є</th><th>Умови</th></tr></thead>
+    <tbody>
+      <tr data-tags="polyhaven hdri free environment lighting sky outdoor indoor"><td><b>polyhaven.com/hdris</b></td><td class="how">Величезна бібліотека HDRI: природа, студії, вулиці, захід</td><td class="note-col">100% безкоштовно, CC0 (можна в комерційних проектах)</td></tr>
+      <tr data-tags="ihdri hdri free download environment sky lighting"><td><b>ihdri.com</b></td><td class="how">Великий вибір HDRI неба, інтер'єрів</td><td class="note-col">Безкоштовно з реєстрацією</td></tr>
+      <tr data-tags="hdri haven sky lighting free blender studio interior exterior"><td><b>hdrihaven.com</b></td><td class="how">Старий сайт (тепер polyhaven), але ще доступний</td><td class="note-col">Безкоштовно, CC0</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-bottom:8px;color:var(--green)">Текстури (PBR — Base Color + Normal + Roughness)</div>
+  <div class="table-wrap" style="margin-bottom:20px"><table>
+    <thead><tr><th>Сайт</th><th>Що є</th><th>Умови</th></tr></thead>
+    <tbody>
+      <tr data-tags="ambientcg texture free pbr material seamless concrete wood fabric metal"><td><b>ambientcg.com</b></td><td class="how">Тисячі PBR текстур: дерево, бетон, метал, тканина, камінь — всі seamless</td><td class="note-col">CC0, безкоштовно, є zip з усіма картами <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="polyhaven texture pbr material high quality floor wood"><td><b>polyhaven.com/textures</b></td><td class="how">Якісні 4K-8K текстури — підлога, цегла, трава, бруківка</td><td class="note-col">CC0, безкоштовно</td></tr>
+      <tr data-tags="freepbr texture material download seamless base color roughness"><td><b>freepbr.com</b></td><td class="how">PBR матеріали для archviz — тканини, метали, підлоги</td><td class="note-col">Безкоштовно з реєстрацією</td></tr>
+      <tr data-tags="quixel megascans texture ultra realistic scan high quality"><td><b>quixel.com/megascans</b></td><td class="how">Ультра-реалістичні скани матеріалів (Megascans)</td><td class="note-col">Безкоштовно з Epic/Unreal акаунтом. В Blender через Bridge плагін</td></tr>
+      <tr data-tags="cgbookcase texture pbr free archviz tile marble plaster brick"><td><b>cgbookcase.com</b></td><td class="how">Архітектурні текстури: мармур, плитка, штукатурка, цегла</td><td class="note-col">Безкоштовно, хороша якість для archviz <span class="tag arch">ARCHVIZ</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-bottom:8px;color:var(--green)">3D Моделі</div>
+  <div class="table-wrap" style="margin-bottom:20px"><table>
+    <thead><tr><th>Сайт</th><th>Що є</th><th>Умови</th></tr></thead>
+    <tbody>
+      <tr data-tags="polyhaven model 3d object free scan high quality furniture"><td><b>polyhaven.com/models</b></td><td class="how">Фотосканні моделі: меблі, рослини, предмети побуту</td><td class="note-col">CC0, безкоштовно <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="sketchfab model download 3d free filter download gltf fbx"><td><b>sketchfab.com</b></td><td class="how">Мільйони моделей. Фільтр: Free + Downloadable</td><td class="note-col">Є безкоштовні, є платні. Завжди перевіряй ліцензію</td></tr>
+      <tr data-tags="free3d model download max obj fbx furniture architecture"><td><b>free3d.com</b></td><td class="how">Меблі, архітектура, авто — для archviz сцен</td><td class="note-col">Є безкоштовні, є платні</td></tr>
+      <tr data-tags="turbosquid 3d model furniture interior design product"><td><b>turbosquid.com</b></td><td class="how">Велика база, є безкоштовні (Squid Fund)</td><td class="note-col">Фільтр: Free. Max і FBX формати є</td></tr>
+      <tr data-tags="blenderkit model material hdri integrated online library addon"><td><b>BlenderKit (аддон)</b></td><td class="how">Вбудована бібліотека прямо в Blender — drag & drop</td><td class="note-col">Частина безкоштовно, частина платно</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-bottom:8px;color:var(--accent)">Навчання (без мільйону відео)</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Ресурс</th><th>Що є</th><th>Формат</th></tr></thead>
+    <tbody>
+      <tr data-tags="blender stack exchange answer question problem solve community"><td><b>blender.stackexchange.com</b></td><td class="how">Конкретні питання → конкретні відповіді з картинками</td><td class="note-col">Якщо щось не виходить — гугли "blender [проблема] site:blender.stackexchange.com"</td></tr>
+      <tr data-tags="blender manual documentation official reference keyboard shortcut"><td><b>docs.blender.org</b></td><td class="how">Офіційна документація. Shortcut Reference — всі хоткеї</td><td class="note-col">Ctrl+F на сторінці для пошуку конкретної функції</td></tr>
+      <tr data-tags="blender artists forum community help wip critique feedback"><td><b>blenderartists.org</b></td><td class="how">Форум: WIP, питання, критика, ShowCase</td><td class="note-col">Активна спільнота, швидко відповідають</td></tr>
+      <tr data-tags="blender guru tutorial donut beginner archviz lighting interior"><td><b>blenderguru.com (YouTube)</b></td><td class="how">Знаменитий Donut tutorial + archviz освітлення</td><td class="note-col">Найкраща точка входу для початківців</td></tr>
+      <tr data-tags="cgcookie blender course video training paid quality"><td><b>cgcookie.com</b></td><td class="how">Платні курси, але дуже структуровані і якісні</td><td class="note-col">Якщо хочеш системно, а не по відосах</td></tr>
+      <tr data-tags="reddit r blender community questions help show work"><td><b>reddit.com/r/blender</b></td><td class="how">500k+ людей, питання, натхнення</td><td class="note-col">r/blenderhelp для конкретних питань</td></tr>
+      <tr data-tags="architecture visualization archviz blender interior render community"><td><b>r/blenderarchviz</b></td><td class="how">Спільнота archviz на Blender</td><td class="note-col">WIP рендери, поради, матеріали</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- QUIZ -->
+<div class="section" data-section="quiz">
+  <div class="quiz-wrap">
+    <div class="quiz-top">
+      <div class="quiz-bar-wrap">
+        <div class="quiz-bar"><div class="quiz-fill" id="q-fill" style="width:0%"></div></div>
+        <div class="quiz-stat" id="q-stat">Починаємо...</div>
+      </div>
+      <div class="quiz-streak" id="q-streak"></div>
+    </div>
+    <div class="quiz-cats" id="q-cats">
+      <div class="qcat on" data-cat="all">Всі</div>
+      <div class="qcat" data-cat="Навігація">Навігація</div>
+      <div class="qcat" data-cat="Виділення">Виділення</div>
+      <div class="qcat" data-cat="Трансформ">Трансформ</div>
+      <div class="qcat" data-cat="Моделювання">Моделювання</div>
+      <div class="qcat" data-cat="Модифікатори">Модифікатори</div>
+      <div class="qcat" data-cat="Матеріали">Матеріали</div>
+      <div class="qcat" data-cat="Рендер">Рендер</div>
+      <div class="qcat" data-cat="Сцена">Сцена</div>
+    </div>
+    <div class="quiz-card" id="q-card">
+      <div class="qc-cat" id="qc-cat"></div>
+      <div class="qc-q" id="qc-q"></div>
+      <div class="qc-hint" id="qc-hint"></div>
+      <div class="qc-ans-wrap">
+        <div class="qc-ans" id="qc-ans" title="Натисни щоб відкрити">👁 Натисни щоб побачити відповідь</div>
+      </div>
+      <div class="quiz-actions">
+        <button class="q-btn q-knew" id="q-knew">✓ Знав</button>
+        <button class="q-btn q-didnt" id="q-didnt">✗ Не знав</button>
+      </div>
+      <button class="quiz-skip" id="q-skip">пропустити →</button>
+    </div>
+    <div class="quiz-done" id="q-done">
+      <div style="font-size:48px">🎉</div>
+      <h2>Раунд завершено!</h2>
+      <p id="q-done-stat">Ти відповів на всі картки.</p>
+      <button class="quiz-reset" id="q-reset">Ще раз</button>
+      <br><button class="quiz-skip" id="q-reset-all" style="margin-top:12px">Скинути весь прогрес</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKLIST -->
+<div class="section" data-section="checklist">
+  <div style="max-width:700px">
+    <div class="cl-progress">
+      <div class="cl-pbar"><div class="cl-pfill" id="cl-fill" style="width:0%"></div></div>
+      <div id="cl-stat" style="font-size:13px;color:var(--dim);white-space:nowrap">0 / 20</div>
+      <button class="cl-reset" id="cl-reset">Скинути</button>
+    </div>
+    <div class="cl-group">
+      <div class="cl-group-title">📐 Сцена і геометрія</div>
+      <div class="cl-item" data-cl="apply-transforms"><div class="cl-cb"></div><div class="cl-text">Застосовані всі трансформи<small>Ctrl+A → All Transforms — критично для модифікаторів і фізики</small></div></div>
+      <div class="cl-item" data-cl="normals"><div class="cl-cb"></div><div class="cl-text">Немає перевернутих нормалей<small>Edit Mode → Overlay → Face Orientation — все має бути синє</small></div></div>
+      <div class="cl-item" data-cl="non-manifold"><div class="cl-cb"></div><div class="cl-text">Mesh без помилок (Non-manifold)<small>Edit Mode → Select → Select All by Trait → Non-manifold</small></div></div>
+      <div class="cl-item" data-cl="modifiers-ok"><div class="cl-cb"></div><div class="cl-text">Модифікатори перевірені<small>Застосовані або залишені навмисно — залежить від задачі</small></div></div>
+    </div>
+    <div class="cl-group">
+      <div class="cl-group-title">🎨 Матеріали і текстури</div>
+      <div class="cl-item" data-cl="all-materials"><div class="cl-cb"></div><div class="cl-text">Всі об'єкти мають матеріал<small>Рожевий = немає матеріалу. Перевір в Material Preview (Z → 2)</small></div></div>
+      <div class="cl-item" data-cl="textures-linked"><div class="cl-cb"></div><div class="cl-text">Текстури правильно підключені<small>Shader Editor: Image Texture → Base Color / Roughness тощо</small></div></div>
+      <div class="cl-item" data-cl="uv-done"><div class="cl-cb"></div><div class="cl-text">UV розгортка зроблена (де потрібно)<small>Без UV текстура буде некоректно відображатись</small></div></div>
+      <div class="cl-item" data-cl="texture-size"><div class="cl-cb"></div><div class="cl-text">Розміри текстур оптимізовані<small>2K для більшості, 4K тільки для головних об'єктів</small></div></div>
+    </div>
+    <div class="cl-group">
+      <div class="cl-group-title">💡 Освітлення</div>
+      <div class="cl-item" data-cl="light-exists"><div class="cl-cb"></div><div class="cl-text">Є джерело світла або HDRI<small>Без освітлення = чорний рендер</small></div></div>
+      <div class="cl-item" data-cl="world-bg"><div class="cl-cb"></div><div class="cl-text">World Background налаштований<small>World Properties → Color або HDRI Environment Texture</small></div></div>
+      <div class="cl-item" data-cl="light-check"><div class="cl-cb"></div><div class="cl-text">Немає засвічених або чорних плям<small>Зроби тестовий рендер 25% розміром щоб перевірити</small></div></div>
+    </div>
+    <div class="cl-group">
+      <div class="cl-group-title">📷 Камера</div>
+      <div class="cl-item" data-cl="camera-set"><div class="cl-cb"></div><div class="cl-text">Камера виставлена правильно<small>Numpad 0 = вид з камери. G Z = рух вгору/вниз</small></div></div>
+      <div class="cl-item" data-cl="resolution"><div class="cl-cb"></div><div class="cl-text">Розрешення і Aspect Ratio<small>Output Properties → Resolution X/Y. % = масштаб (25% для тесту)</small></div></div>
+      <div class="cl-item" data-cl="dof"><div class="cl-cb"></div><div class="cl-text">Depth of Field (якщо потрібен)<small>Camera Properties → Depth of Field → Focus Object або Distance</small></div></div>
+    </div>
+    <div class="cl-group">
+      <div class="cl-group-title">⚙️ Рендер налаштування</div>
+      <div class="cl-item" data-cl="engine"><div class="cl-cb"></div><div class="cl-text">Рендер движок вибраний<small>Render Properties → Engine: Cycles (реалізм) або EEVEE (швидко)</small></div></div>
+      <div class="cl-item" data-cl="samples"><div class="cl-cb"></div><div class="cl-text">Samples достатні<small>Cycles: 512+ для фіналу. EEVEE: 64+. Менше = шум</small></div></div>
+      <div class="cl-item" data-cl="denoise"><div class="cl-cb"></div><div class="cl-text">Denoising увімкнений (Cycles)<small>Render Properties → Denoising → Intel OpenImageDenoise</small></div></div>
+      <div class="cl-item" data-cl="frame-range"><div class="cl-cb"></div><div class="cl-text">Frame range правильний<small>Output Properties → Frame Range. Для стоп-кадру = 1 кадр</small></div></div>
+    </div>
+    <div class="cl-group">
+      <div class="cl-group-title">💾 Збереження результату</div>
+      <div class="cl-item" data-cl="output-path"><div class="cl-cb"></div><div class="cl-text">Output path вказаний<small>Output Properties → Output → шлях. Інакше // = папка .blend файлу</small></div></div>
+      <div class="cl-item" data-cl="file-format"><div class="cl-cb"></div><div class="cl-text">Формат файлу вибраний<small>PNG (прозорість), JPG (менший файл), EXR (пост-обробка)</small></div></div>
+      <div class="cl-item" data-cl="save-blend"><div class="cl-cb"></div><div class="cl-text">Зберіг .blend файл (Ctrl+S)<small>Перед довгим рендером — обов'язково!</small></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="section" data-section="settings">
+  <div style="max-width:820px">
+    <div class="section-title">⚙️ Рекомендовані налаштування Blender для архвізера</div>
+    <div class="table-wrap" style="margin-bottom:20px"><table>
+      <thead><tr><th>Де знайти</th><th>Що змінити</th><th>Чому</th></tr></thead>
+      <tbody>
+        <tr><td><b>Edit → Preferences → Interface</b></td><td class="how">Resolution Scale: 1.2–1.5</td><td class="note-col">Крупніший UI — зручніше на великих моніторах</td></tr>
+        <tr><td><b>Viewport → Overlay</b></td><td class="how">Cavity: ON, Outline: ON</td><td class="note-col">Краще видно ребра і деталі меша в Solid mode</td></tr>
+        <tr><td><b>Navigation</b></td><td class="how">Orbit Around Selection: ON</td><td class="note-col">Обертати навколо виділеного — як в Max</td></tr>
+        <tr><td><b>Navigation</b></td><td class="how">Auto Perspective: OFF</td><td class="note-col">Автоперехід в ортогональний часто дратує</td></tr>
+        <tr><td><b>Input → Keyboard</b></td><td class="how">Emulate Numpad: ON (якщо нема нампаду)</td><td class="note-col">1–7 на основній клаві = Numpad 1–7</td></tr>
+        <tr><td><b>Input → Mouse</b></td><td class="how">Emulate 3 Button Mouse: ON (для ноутбука)</td><td class="note-col">Alt+ЛКМ = Middle Click</td></tr>
+        <tr><td><b>Add-ons</b></td><td class="how">Node Wrangler: ON</td><td class="note-col">Ctrl+Shift+ЛКМ = Preview будь-якого нода</td></tr>
+        <tr><td><b>Add-ons</b></td><td class="how">LoopTools: ON</td><td class="note-col">Circle, Relax, Space — корисні mesh-інструменти</td></tr>
+        <tr><td><b>Add-ons</b></td><td class="how">Bool Tool: ON</td><td class="note-col">Швидкий Boolean — Ctrl+Shift+B</td></tr>
+        <tr><td><b>Add-ons</b></td><td class="how">Auto Mirror: ON</td><td class="note-col">Швидко дзеркалити об'єкт</td></tr>
+        <tr><td><b>Add-ons</b></td><td class="how">Archimesh: ON</td><td class="note-col">Швидко створювати стіни, вікна, двері, сходи</td></tr>
+        <tr><td><b>Add-ons</b></td><td class="how">FBX / OBJ Import-Export: ON</td><td class="note-col">Потрібно для роботи з моделями з Max</td></tr>
+        <tr><td><b>Keymap</b></td><td class="how">Industry Compatible (опціонально)</td><td class="note-col">Перемикає ВЕСЬ кеймап на стандарт Maya/Max — УВАГА</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title" style="margin-top:24px">🚀 Startup File — зберегти свою стартову сцену</div>
+    <div class="table-wrap" style="margin-bottom:20px"><table>
+      <thead><tr><th>Дія</th><th>Як</th><th>Нотатки</th></tr></thead>
+      <tbody>
+        <tr><td><b>Зберегти startup scene</b></td><td class="how">File → Defaults → Save Startup File</td><td class="note-col">Кожен новий файл буде з твоїми налаштуваннями</td></tr>
+        <tr><td><b>Прибрати дефолтний куб</b></td><td class="how">X → Delete перед збереженням</td><td class="note-col">Або постав свою базову сцену з камерою і світлом</td></tr>
+        <tr><td><b>Скинути до заводських</b></td><td class="how">File → Defaults → Load Factory Settings</td><td class="note-col">Якщо щось пішло не так</td></tr>
+        <tr><td><b>Тема інтерфейсу</b></td><td class="how">Preferences → Themes → Import</td><td class="note-col">Є теми схожі на 3DS Max (dark grey)</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title" style="margin-top:24px">🎬 Cycles — налаштування для архвіз рендеру</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Параметр</th><th>Рекомендація</th><th>Нотатки</th></tr></thead>
+      <tbody>
+        <tr><td><b>Device</b></td><td class="how">GPU Compute</td><td class="note-col">Render Properties → Device → GPU (якщо є відеокарта)</td></tr>
+        <tr><td><b>Max Samples</b></td><td class="how">512–2048 для фіналу</td><td class="note-col">64–128 для тесту. Більше = краще але довше</td></tr>
+        <tr><td><b>Denoiser</b></td><td class="how">Intel OpenImageDenoise або OptiX</td><td class="note-col">Render → Denoising. Знижує шум при меншій кількості samples</td></tr>
+        <tr><td><b>Light Paths / Glass</b></td><td class="how">Glass Bounces: 8–12</td><td class="note-col">Для сцен зі склом збільш до 12+, дефолт = 4</td></tr>
+        <tr><td><b>Filter Glossy</b></td><td class="how">1.0</td><td class="note-col">Зменшує шум від глосі поверхонь</td></tr>
+        <tr><td><b>Color Management</b></td><td class="how">Filmic або AgX</td><td class="note-col">Render → Color Management. AgX — новий стандарт (4.x)</td></tr>
+        <tr><td><b>Output Format</b></td><td class="how">PNG 8-bit або EXR 32-bit</td><td class="note-col">EXR якщо хочеш пост-обробку в Photoshop</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<div id="no-results">
+  <div style="font-size:36px;margin-bottom:16px">🔍</div>
+  <div style="font-size:17px;font-weight:700;color:var(--text)">Нічого не знайдено</div>
+  <div style="margin-top:8px;font-size:13px">Спробуй по-англійськи або синонім</div>
+</div>
+
+</main>
+
+<script>
+const searchEl = document.getElementById('search') || document.querySelector('input[type=text]') || document.querySelector('input');
+const countEl  = document.getElementById('count');
+const tabs     = document.querySelectorAll('.tab');
+const sections = document.querySelectorAll('.section');
+let activeTab  = 'all';
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    activeTab = tab.dataset.tab;
+    applySearch(searchEl.value);
+  });
+});
+
+function applySearch(q) {
+  q = (q || '').toLowerCase().trim();
+  let total = 0;
+
+  sections.forEach(sec => {
+    const secName = sec.dataset.section;
+    const inScope = activeTab === 'all' || secName === activeTab;
+
+    if (!inScope) { sec.style.display = 'none'; return; }
+
+    // TABLE ROWS
+    sec.querySelectorAll('tbody tr').forEach(row => {
+      const match = !q || (row.textContent + (row.dataset.tags||'')).toLowerCase().includes(q);
+      row.classList.toggle('hidden', !match);
+      if (match) total++;
+    });
+
+    // RECIPE CARDS
+    sec.querySelectorAll('.recipe-card').forEach(card => {
+      const match = !q || (card.textContent + (card.dataset.tags||'')).toLowerCase().includes(q);
+      card.classList.toggle('hidden', !match);
+      if (match) total++;
+    });
+
+    // WTF CARDS
+    sec.querySelectorAll('.wtf-card').forEach(card => {
+      const match = !q || (card.textContent + (card.dataset.tags||'')).toLowerCase().includes(q);
+      card.classList.toggle('hidden', !match);
+      if (match) total++;
+    });
+
+    // Show/hide section
+    const hasSearchable = sec.querySelectorAll('tbody tr, .recipe-card, .wtf-card').length > 0;
+    if (hasSearchable) {
+      const anyVisible = sec.querySelectorAll('tbody tr:not(.hidden), .recipe-card:not(.hidden), .wtf-card:not(.hidden)').length;
+      sec.style.display = (anyVisible === 0 && q) ? 'none' : 'block';
+    } else {
+      sec.style.display = q ? 'none' : 'block';
+    }
+  });
+
+  document.getElementById('no-results').classList.toggle('show', total === 0 && !!q);
+  countEl.textContent = q ? `${total} знайдено` : '';
+}
+
+applySearch('');
+
+// Search events — all possible ways to catch input on any browser/WebView
+var _lastSearchVal = '';
+function onSearch() {
+  var v = searchEl ? searchEl.value : '';
+  if (v === _lastSearchVal) return;
+  _lastSearchVal = v;
+  applySearch(v);
+  if (v) window.scrollTo(0, 0); // scroll to top so results are visible
+}
+
+if (searchEl) {
+  searchEl.addEventListener('input',          onSearch);
+  searchEl.addEventListener('keyup',          onSearch);
+  searchEl.addEventListener('keydown',        onSearch);
+  searchEl.addEventListener('change',         onSearch);
+  searchEl.addEventListener('compositionend', onSearch);
+  searchEl.addEventListener('paste',          function(){ setTimeout(onSearch, 0); });
+}
+
+// Fallback polling — catches value changes that events miss (iOS/Telegram quirk)
+(function poll() {
+  onSearch();
+  setTimeout(poll, 80);
+})();
+
+// Desktop only: auto-focus search on keypress
+const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+if (!isMobile) {
+  document.addEventListener('keydown', e => {
+    if (e.target===searchEl || e.ctrlKey || e.altKey || e.metaKey) return;
+    if (e.key==='Escape') { searchEl.value=''; applySearch(''); return; }
+    if (e.key.length===1) searchEl.focus();
+  });
+}
+
+// Keyboard visual
+const KB_DATA = {
+  // [letter, cat, width-class, {obj, edit, sculpt}]
+  rows: [
+    [['Esc','u','w15',{o:'Скасувати',e:'Скасувати',s:'Скасувати'}],['F1','','',{}],['F2','','',{}],['F3','u','',{o:'Пошук команди',e:'Пошук',s:'Пошук'}],['F4','','',{}],['F5','','',{}],['F6','','',{}],['F7','','',{}],['F8','','',{}],['F9','u','',{o:'Re-render',e:'Re-render',s:''}],['F10','','',{}],['F11','','',{}],['F12','v','',{o:'🎬 Рендер!',e:'Рендер!',s:''}]],
+    [['`','v','',{o:'View Pie',e:'View Pie',s:'View Pie'}],['1','v','',{o:'Num: Спереду',e:'Vertex Mode',s:''}],['2','v','',{o:'Num: Roll',e:'Edge Mode',s:''}],['3','v','',{o:'Num: Збоку',e:'Face Mode',s:''}],['4','','',{}],['5','v','',{o:'Num:Persp/Ortho',e:'',s:''}],['6','','',{}],['7','v','',{o:'Num: Зверху',e:'',s:''}],['8','','',{}],['9','','',{}],['0','v','',{o:'Num: Camera',e:'',s:''}],['-','','',{}],['=','','',{}],['Bksp','','w20',{}]],
+    [['Tab','v','w17',{o:'Object↔Edit',e:'Object↔Edit',s:'Object↔Sculpt'}],['Q','','',{}],['W','','',{}],['E','e','',{o:'(нічого)',e:'Extrude',s:'Розмір (F)'}],['R','t','',{o:'Rotate',e:'Rotate',s:'Розмір пензля'}],['T','u','',{o:'Toolbar',e:'Toolbar',s:'Toolbar'}],['Y','','',{}],['U','e','',{o:'(нічого)',e:'UV Unwrap',s:''}],['I','o','',{o:'Keyframe',e:'Inset',s:''}],['O','s','',{o:'Proportional',e:'Proportional',s:''}],['P','o','',{o:'Ctrl+P=Parent',e:'Separate (P)',s:''}],['[','','',{}],[']','','',{}],['\\','','w15',{}]],
+    [['Caps','','w20',{}],['A','s','',{o:'Select All/None',e:'Select All/None',s:''}],['S','t','',{o:'Scale',e:'Scale',s:'Сила (Shift+F)'}],['D','o','',{o:'Shift+D=Dup',e:'Shift+D=Dup',s:''}],['F','e','',{o:'(нічого)',e:'Fill/Cap hole',s:''}],['G','t','',{o:'Grab / Move',e:'Grab / Move',s:''}],['H','o','',{o:'Hide/Alt+H=Show',e:'Hide selected',s:''}],['J','','',{}],['K','e','',{o:'(нічого)',e:'Knife cut',s:''}],['L','s','',{o:'Linked (hover)',e:'Linked (hover)',s:''}],[';','','',{}],["'",'','',{}],['Enter','u','w20',{o:'Підтвердити',e:'Підтвердити',s:'Підтвердити'}]],
+    [['Shift','mod','w25',{}],['Z','v','',{o:'Shading Pie',e:'Shading Pie',s:'Shading Pie'}],['X','d','',{o:'Delete меню',e:'Delete меню',s:'Flip brush (X)'}],['C','s','',{o:'Circle Select',e:'Circle Select',s:''}],['V','','',{}],['B','s','',{o:'Box Select',e:'Box Select',s:'Box Mask'}],['N','u','',{o:'N-Panel',e:'N-Panel',s:'N-Panel'}],['M','o','',{o:'→ Collection',e:'Merge/Weld',s:'Mask'}],[',','v','',{o:'Orientation Pie',e:'',s:''}],['.','t','',{o:'Pivot Pie',e:'Pivot Pie',s:''}],['/','v','',{o:'Isolate (Local)',e:'Isolate',s:'Isolate FaceSet'}],['Shift','mod','w25',{}]],
+    [['Ctrl','mod','w20',{}],['Alt','mod','w15',{}],['Space','u','w60',{o:'Play Animation',e:'Confirm / Anim',s:'Brush Pie (Shift+Sp)'}],['Alt','mod','w15',{}],['Ctrl','mod','w20',{}]]
+  ]
+};
+
+// Fix broken row 1 data entry
+KB_DATA.rows[0] = [
+  ['Esc','u','w15',{o:'Скасувати',e:'Скасувати',s:'Скасувати'}],
+  ['F1','','',{}],['F2','','',{}],
+  ['F3','u','',{o:'Пошук команди',e:'Пошук команди',s:'Пошук'}],
+  ['F4','','',{}],['F5','','',{}],['F6','','',{}],['F7','','',{}],['F8','','',{}],
+  ['F9','u','',{o:'Re-render',e:'Re-render',s:''}],
+  ['F10','','',{}],['F11','','',{}],
+  ['F12','v','',{o:'🎬 Рендер!',e:'Рендер!',s:''}]
+];
+
+function renderKB(mode) {
+  const kb = document.getElementById('kb');
+  if (!kb) return;
+  kb.innerHTML = '';
+  KB_DATA.rows.forEach(row => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'kb-row';
+    row.forEach(([lbl, cat, wClass, fns]) => {
+      const k = document.createElement('div');
+      k.className = 'kk' + (cat ? ' ' + cat : '') + (wClass ? ' ' + wClass : '');
+      const fn = fns ? (fns[mode === 'obj' ? 'o' : mode === 'edit' ? 'e' : 's'] || '') : '';
+      k.innerHTML = `<div class="kk-l">${lbl}</div><div class="kk-fn">${fn}</div>`;
+      rowEl.appendChild(k);
+    });
+    kb.appendChild(rowEl);
+  });
+}
+
+// Mode buttons
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderKB(btn.dataset.mode);
+  });
+});
+renderKB('obj');
+
+// ===================== QUIZ =====================
+const QUIZ_DATA = [
+  // [Питання, Відповідь, Підказка, Категорія]
+  ["Обертати вьюпорт", "Middle Mouse drag", "Затисни колісце миші", "Навігація"],
+  ["Панорамувати (Pan)", "Shift + Middle drag", "В Max був Ctrl — тут Shift!", "Навігація"],
+  ["Зум", "Scroll або Ctrl + Middle drag", "", "Навігація"],
+  ["Фокус на виділеному", "Numpad . (крапка)", "Або ~ → View Selected", "Навігація"],
+  ["Вид спереду", "Numpad 1", "Ctrl+Numpad 1 = ззаду", "Навігація"],
+  ["Вид зверху", "Numpad 7", "Ctrl+Numpad 7 = знизу", "Навігація"],
+  ["Перспектива ↔ Ортогональний", "Numpad 5", "Toggle між режимами", "Навігація"],
+  ["Ізолювати / Local View", "/ (Slash)", "Ще раз / = вийти", "Навігація"],
+  ["Вид з камери", "Numpad 0", "Ще раз для виходу", "Навігація"],
+
+  ["Виділити все / зняти", "A (двічі = зняти)", "Подвійний A або Alt+A", "Виділення"],
+  ["Box Select", "B", "Drag виділяє прямокутником", "Виділення"],
+  ["Circle Select", "C", "Scroll = розмір, ПКМ = вийти", "Виділення"],
+  ["Lasso Select", "Ctrl + ПКМ drag", "Довільна форма виділення", "Виділення"],
+  ["Інвертувати виділення", "Ctrl+I", "Що не виділено — стане виділеним", "Виділення"],
+  ["Loop Select (петля ребер)", "Alt + ЛКМ", "В Edit Mode на ребро або грань", "Виділення"],
+  ["Linked Select (весь меш)", "L (hover) або Ctrl+L", "Виділяє пов'язаний меш одним кліком", "Виділення"],
+  ["Grow / Shrink виділення", "Ctrl+Numpad + / Ctrl+Numpad -", "Розширити або звузити", "Виділення"],
+
+  ["Grab / Move", "G", "Потім X/Y/Z = вісь. Число = точно", "Трансформ"],
+  ["Rotate", "R", "R Z 90 Enter = 90° по Z", "Трансформ"],
+  ["Scale", "S", "S X = тільки по осі X", "Трансформ"],
+  ["Apply трансформ", "Ctrl+A", "Scale, Rotation, Location — перед рендером!", "Трансформ"],
+  ["Точний рух на число", "G X 2.5 Enter", "Переміщення на 2.5 по осі X", "Трансформ"],
+  ["Snap to vertex/grid", "Ctrl (під час G) або Shift+Tab", "Magnet icon у топбарі для постійного snap", "Трансформ"],
+  ["Mirror / відзеркалити", "Ctrl+M → вісь", "Або в Edit Mode: Item → Mirror", "Трансформ"],
+
+  ["Chamfer / Bevel", "Ctrl+B", "Scroll = сегменти. Тільки в Edit Mode!", "Моделювання"],
+  ["Vertex Bevel", "Ctrl+Shift+B", "Chamfer вертексів", "Моделювання"],
+  ["Extrude", "E", "Alt+E = Extrude menu з опціями", "Моделювання"],
+  ["Loop Cut (як Ring в Max)", "Ctrl+R", "Scroll = кількість, Enter = підтвердити", "Моделювання"],
+  ["Knife (розрізати)", "K", "K → клікай → Enter або Space", "Моделювання"],
+  ["Inset Faces", "I", "Edit Mode, Face select mode", "Моделювання"],
+  ["Merge вертексів", "M", "Merge меню: At Center, At Cursor тощо", "Моделювання"],
+  ["Fill (заповнити hole)", "F", "Vertices або Edges → Face", "Моделювання"],
+  ["Separate (відокремити)", "P", "Separate selection / by loose parts", "Моделювання"],
+  ["Join (об'єднати об'єкти)", "Ctrl+J", "В Object Mode", "Моделювання"],
+  ["Дублювати", "Shift+D", "Alt+D = linked duplicate (пов'язана копія)", "Моделювання"],
+  ["Видалити", "X або Delete", "Відкриє меню (вертекс / ребро / грань)", "Моделювання"],
+  ["Vertex / Edge / Face mode", "1 / 2 / 3", "В Edit Mode (не Numpad!)", "Моделювання"],
+  ["Shrink/Flatten вертексів", "Alt+S", "Рухає по нормалях — корисно для Inflate", "Моделювання"],
+
+  ["Subdivision Surface (TurboSmooth)", "Modifier Properties → Subdivision Surface", "Viewport і Render рівні — окремо!", "Модифікатори"],
+  ["Mirror modifier", "Modifier Properties → Mirror", "Apply = застосувати назавжди", "Модифікатори"],
+  ["Boolean (ProBoolean)", "Modifier Properties → Boolean", "Union / Difference / Intersect", "Модифікатори"],
+  ["Array modifier", "Modifier Properties → Array", "Fixed Count, Fit Curve, Object Offset", "Модифікатори"],
+  ["Solidify (Shell у Max)", "Modifier Properties → Solidify", "Thickness = товщина оболонки", "Модифікатори"],
+  ["Apply модифікатор", "Modifier dropdown → Apply (✓)", "Або Ctrl+A якщо є в меню", "Модифікатори"],
+
+  ["Відкрити Shader Editor", "Shader Editor workspace або Ctrl+Space у вікні", "Перемикай тип вікна правою панеллю", "Матеріали"],
+  ["Додати новий матеріал", "Properties → Material → + New", "Один об'єкт може мати кілька матеріалів", "Матеріали"],
+  ["Додати Image Texture нод", "Shift+A → Texture → Image Texture", "В Shader Editor", "Матеріали"],
+  ["Principled BSDF", "Основний нод матеріалу Blender", "Base Color, Roughness, Metallic, IOR (скло=1.45)", "Матеріали"],
+  ["Preview нода (Node Wrangler)", "Ctrl+Shift + ЛКМ по ноду", "Аддон Node Wrangler має бути ON", "Матеріали"],
+
+  ["Рендерити зображення", "F12", "Результат відкриється в Image Editor", "Рендер"],
+  ["Зупинити рендер", "Esc", "В вікні рендеру", "Рендер"],
+  ["Зберегти рендер", "Image → Save As (в Image Editor)", "Або Alt+S", "Рендер"],
+  ["Cycles vs EEVEE", "Render Properties → Engine", "Cycles = реалізм (повільно), EEVEE = швидко", "Рендер"],
+  ["Render Resolution + %", "Output Properties → Resolution", "% = масштаб. 25% для швидкого тесту", "Рендер"],
+  ["Denoising (Cycles)", "Render Properties → Denoising", "Intel OIDN або OptiX. Знижує шум", "Рендер"],
+
+  ["Приховати об'єкт", "H", "Alt+H = показати все", "Сцена"],
+  ["Видалити об'єкт", "X → Delete", "Або просто Delete", "Сцена"],
+  ["Object ↔ Edit Mode", "Tab", "Головний перемикач режимів", "Сцена"],
+  ["Search (пошук команди)", "F3", "Пошук будь-якої команди Blender", "Сцена"],
+  ["Undo / Redo", "Ctrl+Z / Ctrl+Shift+Z", "Як у Max", "Сцена"],
+  ["N-Panel (Properties)", "N", "Права панель — координати, Item, Tool", "Сцена"],
+  ["Ізолювати об'єкт", "/ (Slash)", "Local View. Ще раз / = вийти", "Сцена"],
+];
+
+let quizCat = 'all';
+let quizDeck = [];
+let quizIdx  = 0;
+let quizKnew = 0;
+let quizDidnt = 0;
+let quizStreak = 0;
+let quizScores = {};
+
+function qLoadScores() {
+  try { quizScores = JSON.parse(localStorage.getItem('blenderQuizScores')||'{}'); } catch(e) { quizScores = {}; }
+}
+function qSaveScores() {
+  try { localStorage.setItem('blenderQuizScores', JSON.stringify(quizScores)); } catch(e) {}
+}
+
+function qBuildDeck() {
+  const base = quizCat==='all' ? QUIZ_DATA : QUIZ_DATA.filter(c=>c[3]===quizCat);
+  quizDeck = [];
+  base.forEach((card, localIdx) => {
+    const key = QUIZ_DATA.indexOf(card);
+    const score = quizScores[key] || 0;
+    const weight = Math.max(1, 4 - score); // низький score = більше шансів
+    for (let w=0; w<weight; w++) quizDeck.push({card, key});
+  });
+  // shuffle
+  for (let i=quizDeck.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [quizDeck[i],quizDeck[j]] = [quizDeck[j],quizDeck[i]];
+  }
+  quizIdx = 0;
+  quizKnew = 0;
+  quizDidnt = 0;
+}
+
+function qShowCard() {
+  const cardEl = document.getElementById('q-card');
+  const doneEl = document.getElementById('q-done');
+  if (!cardEl || !doneEl) return;
+
+  if (quizIdx >= quizDeck.length) {
+    cardEl.style.display = 'none';
+    doneEl.style.display = 'block';
+    const total = quizKnew + quizDidnt;
+    const pct = total ? Math.round(quizKnew/total*100) : 0;
+    document.getElementById('q-done-stat').textContent =
+      `Знав: ${quizKnew} з ${total} (${pct}%)${quizStreak>=3?' 🔥'+quizStreak:''}`;
+    return;
+  }
+
+  cardEl.style.display = '';
+  doneEl.style.display = 'none';
+  cardEl.className = 'quiz-card';
+
+  const {card} = quizDeck[quizIdx];
+  document.getElementById('qc-cat').textContent = card[3];
+  document.getElementById('qc-q').textContent = card[0];
+  document.getElementById('qc-hint').textContent = card[2] || '';
+  const ansEl = document.getElementById('qc-ans');
+  ansEl.dataset.answer = card[1];
+  ansEl.textContent = '👁 Натисни щоб побачити відповідь';
+  ansEl.classList.remove('show');
+  qUpdateProgress();
+}
+
+function qReveal() {
+  const ansEl = document.getElementById('qc-ans');
+  if (ansEl.classList.contains('show')) return;
+  ansEl.textContent = ansEl.dataset.answer;
+  ansEl.classList.add('show');
+  document.getElementById('q-card').classList.add('revealed');
+}
+
+function qUpdateProgress() {
+  const total = quizDeck.length;
+  const done  = quizKnew + quizDidnt;
+  const pct   = total ? Math.round(done/total*100) : 0;
+  const fillEl = document.getElementById('q-fill');
+  if (fillEl) fillEl.style.width = pct + '%';
+  const statEl = document.getElementById('q-stat');
+  if (statEl) statEl.textContent = `${done} / ${total} (${pct}%)`;
+  const streakEl = document.getElementById('q-streak');
+  if (streakEl) streakEl.textContent = quizStreak >= 3 ? `🔥 ${quizStreak}` : '';
+}
+
+qLoadScores();
+qBuildDeck();
+qShowCard();
+
+document.getElementById('qc-ans')?.addEventListener('click', qReveal);
+
+document.getElementById('q-knew')?.addEventListener('click', () => {
+  if (!document.getElementById('q-card').classList.contains('revealed')) return;
+  const {key} = quizDeck[quizIdx];
+  quizScores[key] = Math.min(5, (quizScores[key]||0) + 1);
+  qSaveScores();
+  quizKnew++;
+  quizStreak++;
+  quizIdx++;
+  qShowCard();
+});
+
+document.getElementById('q-didnt')?.addEventListener('click', () => {
+  if (!document.getElementById('q-card').classList.contains('revealed')) return;
+  const {key} = quizDeck[quizIdx];
+  quizScores[key] = Math.max(0, (quizScores[key]||0) - 1);
+  qSaveScores();
+  quizDidnt++;
+  quizStreak = 0;
+  document.getElementById('q-card').classList.add('wrong');
+  setTimeout(() => { quizIdx++; qShowCard(); }, 400);
+});
+
+document.getElementById('q-skip')?.addEventListener('click', () => {
+  quizIdx++;
+  qShowCard();
+});
+
+document.getElementById('q-reset')?.addEventListener('click', () => {
+  quizStreak = 0;
+  qBuildDeck();
+  qShowCard();
+});
+
+document.getElementById('q-reset-all')?.addEventListener('click', () => {
+  if (confirm('Скинути весь прогрес квізу? Всі оцінки карток будуть обнулені.')) {
+    quizScores = {};
+    qSaveScores();
+    quizStreak = 0;
+    qBuildDeck();
+    qShowCard();
+  }
+});
+
+document.querySelectorAll('.qcat').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.qcat').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    quizCat = btn.dataset.cat;
+    quizStreak = 0;
+    qBuildDeck();
+    qShowCard();
+  });
+});
+
+
+// ===================== CHECKLIST =====================
+const CL_ITEMS = document.querySelectorAll('.cl-item');
+let clState = {};
+
+function clLoad() {
+  try { clState = JSON.parse(localStorage.getItem('blenderCL')||'{}'); } catch(e) { clState = {}; }
+  CL_ITEMS.forEach(item => {
+    if (clState[item.dataset.cl]) item.classList.add('done');
+  });
+  clUpdateProgress();
+}
+
+function clUpdateProgress() {
+  const total = CL_ITEMS.length;
+  const done  = document.querySelectorAll('.cl-item.done').length;
+  const pct   = Math.round(done/total*100);
+  const fillEl = document.getElementById('cl-fill');
+  if (fillEl) fillEl.style.width = pct + '%';
+  const statEl = document.getElementById('cl-stat');
+  if (statEl) statEl.textContent = `${done} / ${total}`;
+}
+
+CL_ITEMS.forEach(item => {
+  item.addEventListener('click', () => {
+    item.classList.toggle('done');
+    clState[item.dataset.cl] = item.classList.contains('done');
+    clUpdateProgress();
+    try { localStorage.setItem('blenderCL', JSON.stringify(clState)); } catch(e) {}
+  });
+});
+
+document.getElementById('cl-reset')?.addEventListener('click', () => {
+  CL_ITEMS.forEach(item => item.classList.remove('done'));
+  clState = {};
+  clUpdateProgress();
+  try { localStorage.removeItem('blenderCL'); } catch(e) {}
+});
+
+clLoad();
+</script>
+</body>
+</html>
