@@ -848,9 +848,14 @@
     <button class="mode-btn" data-mode="sculpt">Sculpt Mode</button>
   </div>
 
-  <!-- Keyboard -->
+  <!-- Keyboard + Numpad -->
   <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px">
-    <div id="kb" style="display:inline-flex;flex-direction:column;gap:5px;min-width:680px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:12px"></div>
+    <div style="display:inline-flex;gap:12px;align-items:flex-start">
+      <!-- Main keyboard -->
+      <div id="kb" style="display:inline-flex;flex-direction:column;gap:5px;min-width:680px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:12px"></div>
+      <!-- Numpad -->
+      <div id="kb-numpad" style="padding:16px;background:var(--card);border:1px solid var(--border);border-radius:12px;flex-shrink:0"></div>
+    </div>
   </div>
 
   <!-- Legend -->
@@ -1782,7 +1787,7 @@ const KB_DATA = {
   // [letter, cat, width-class, {obj, edit, sculpt}]
   rows: [
     [['Esc','u','w15',{o:'Скасувати',e:'Скасувати',s:'Скасувати'}],['F1','','',{}],['F2','','',{}],['F3','u','',{o:'Пошук команди',e:'Пошук',s:'Пошук'}],['F4','','',{}],['F5','','',{}],['F6','','',{}],['F7','','',{}],['F8','','',{}],['F9','u','',{o:'Re-render',e:'Re-render',s:''}],['F10','','',{}],['F11','','',{}],['F12','v','',{o:'🎬 Рендер!',e:'Рендер!',s:''}]],
-    [['`','v','',{o:'View Pie',e:'View Pie',s:'View Pie'}],['1','v','',{o:'Num: Спереду',e:'Vertex Mode',s:''}],['2','v','',{o:'Num: Roll',e:'Edge Mode',s:''}],['3','v','',{o:'Num: Збоку',e:'Face Mode',s:''}],['4','','',{}],['5','v','',{o:'Num:Persp/Ortho',e:'',s:''}],['6','','',{}],['7','v','',{o:'Num: Зверху',e:'',s:''}],['8','','',{}],['9','','',{}],['0','v','',{o:'Num: Camera',e:'',s:''}],['-','','',{}],['=','','',{}],['Bksp','','w20',{}]],
+    [['`','v','',{o:'View Pie (~)',e:'View Pie (~)',s:'View Pie (~)'}],['1','','',{o:'',e:'Vertex Mode',s:''}],['2','','',{o:'',e:'Edge Mode',s:''}],['3','','',{o:'',e:'Face Mode',s:''}],['4','','',{}],['5','','',{}],['6','','',{}],['7','','',{}],['8','','',{}],['9','','',{}],['0','','',{}],['-','','',{}],['=','','',{}],['Bksp','','w20',{}]],
     [['Tab','v','w17',{o:'Object↔Edit',e:'Object↔Edit',s:'Object↔Sculpt'}],['Q','','',{}],['W','','',{}],['E','e','',{o:'(нічого)',e:'Extrude',s:'Розмір (F)'}],['R','t','',{o:'Rotate',e:'Rotate',s:'Розмір пензля'}],['T','u','',{o:'Toolbar',e:'Toolbar',s:'Toolbar'}],['Y','','',{}],['U','e','',{o:'(нічого)',e:'UV Unwrap',s:''}],['I','o','',{o:'Keyframe',e:'Inset',s:''}],['O','s','',{o:'Proportional',e:'Proportional',s:''}],['P','o','',{o:'Ctrl+P=Parent',e:'Separate (P)',s:''}],['[','','',{}],[']','','',{}],['\\','','w15',{}]],
     [['Caps','','w20',{}],['A','s','',{o:'Select All/None',e:'Select All/None',s:''}],['S','t','',{o:'Scale',e:'Scale',s:'Сила (Shift+F)'}],['D','o','',{o:'Shift+D=Dup',e:'Shift+D=Dup',s:''}],['F','e','',{o:'(нічого)',e:'Fill/Cap hole',s:''}],['G','t','',{o:'Grab / Move',e:'Grab / Move',s:''}],['H','o','',{o:'Hide/Alt+H=Show',e:'Hide selected',s:''}],['J','','',{}],['K','e','',{o:'(нічого)',e:'Knife cut',s:''}],['L','s','',{o:'Linked (hover)',e:'Linked (hover)',s:''}],[';','','',{}],["'",'','',{}],['Enter','u','w20',{o:'Підтвердити',e:'Підтвердити',s:'Підтвердити'}]],
     [['Shift','mod','w25',{}],['Z','v','',{o:'Shading Pie',e:'Shading Pie',s:'Shading Pie'}],['X','d','',{o:'Delete меню',e:'Delete меню',s:'Flip brush (X)'}],['C','s','',{o:'Circle Select',e:'Circle Select',s:''}],['V','','',{}],['B','s','',{o:'Box Select',e:'Box Select',s:'Box Mask'}],['N','u','',{o:'N-Panel',e:'N-Panel',s:'N-Panel'}],['M','o','',{o:'→ Collection',e:'Merge/Weld',s:'Mask'}],[',','v','',{o:'Orientation Pie',e:'',s:''}],['.','t','',{o:'Pivot Pie',e:'Pivot Pie',s:''}],['/','v','',{o:'Isolate (Local)',e:'Isolate',s:'Isolate FaceSet'}],['Shift','mod','w25',{}]],
@@ -1819,6 +1824,55 @@ function renderKB(mode) {
   });
 }
 
+// NUMPAD DATA — [label, note-obj, note-edit]
+const NUMPAD_ROWS = [
+  [['Num\nLock','',''],  ['/',  'Isolate (Local)','Isolate'],  ['*','Align to Bone',''],  ['-','Zoom Out','']],
+  [['7','Top',''],       ['8','Orbit Up',''],                  ['9','Bottom (Ctrl+7)',''],['+',' ','']],
+  [['4','Orbit Left',''],['5','Persp↔Ortho',''],              ['6','Orbit Right',''],    ['+','Zoom In','']],
+  [['1','Front',''],     ['2','Orbit Down',''],                ['3','Right',''],          ['Enter','Cam View\n(Num0)','']],
+  [['0','Camera View',''],['0',' ',''],                        ['.','Focus\nSelected',''],['Enter',' ','']],
+];
+
+function renderNumpad() {
+  const np = document.getElementById('kb-numpad');
+  if (!np) return;
+  np.innerHTML = '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px">NUMPAD</div>';
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:grid;grid-template-columns:repeat(4,44px);gap:4px';
+
+  const layout = [
+    {l:'NumLk', n:'', w:1}, {l:'/', n:'Isolate (/)', w:1}, {l:'*', n:'Align→Bone', w:1}, {l:'−', n:'', w:1},
+    {l:'7', n:'⬆ Top', w:1}, {l:'8', n:'Orbit ↑', w:1}, {l:'9', n:'⬇ Bottom', w:1}, {l:'+', n:'Zoom+', w:1, h:2},
+    {l:'4', n:'Orbit ←', w:1}, {l:'5', n:'Persp↔Orth', w:1}, {l:'6', n:'Orbit →', w:1},
+    {l:'1', n:'Front', w:1}, {l:'2', n:'Orbit ↓', w:1}, {l:'3', n:'Right', w:1}, {l:'Enter', n:'', w:1, h:2},
+    {l:'0', n:'Camera', w:2}, {l:'.', n:'Focus', w:1},
+  ];
+
+  layout.forEach(k => {
+    const el = document.createElement('div');
+    const h = k.h || 1;
+    el.style.cssText = `
+      background:var(--bg);border:1px solid var(--border);border-radius:6px;
+      padding:4px 5px;min-height:${h===2?'96px':'44px'};
+      display:flex;flex-direction:column;justify-content:space-between;
+      ${k.w===2?'grid-column:span 2':''}; ${h===2?'grid-row:span 2':''}
+    `;
+    el.innerHTML = `<div style="font-size:11px;font-weight:700;color:var(--text)">${k.l}</div>`
+                 + (k.n ? `<div style="font-size:10px;color:var(--accent);line-height:1.2">${k.n}</div>` : '');
+    if (k.w===2) el.style.gridColumn = 'span 2';
+    if (h===2)   el.style.gridRow    = 'span 2';
+    grid.appendChild(el);
+  });
+
+  np.appendChild(grid);
+
+  // Ctrl hints
+  const hints = document.createElement('div');
+  hints.style.cssText = 'margin-top:10px;font-size:10px;color:var(--dim);line-height:1.8';
+  hints.innerHTML = '<b style="color:var(--muted)">Ctrl +</b><br>1=Back · 3=Left · 7=Bottom<br>0=Camera (set)';
+  np.appendChild(hints);
+}
+
 // Mode buttons
 document.querySelectorAll('.mode-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1828,6 +1882,7 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
   });
 });
 renderKB('obj');
+renderNumpad();
 
 // ===================== QUIZ =====================
 const QUIZ_DATA = [
