@@ -1635,23 +1635,25 @@ function applySearch(q) {
 
     if (!inScope) { sec.style.display = 'none'; return; }
 
-    // TABLE ROWS
+    // TABLE ROWS — шукаємо тільки по data-tags і першій колонці (td:first-child)
     sec.querySelectorAll('tbody tr').forEach(row => {
-      const match = !q || (row.textContent + (row.dataset.tags||'')).toLowerCase().includes(q);
+      const tags = (row.dataset.tags || '').toLowerCase();
+      const firstCell = (row.querySelector('td:first-child') || row).textContent.toLowerCase();
+      const match = !q || tags.includes(q) || firstCell.includes(q);
       row.classList.toggle('hidden', !match);
       if (match) total++;
     });
 
     // RECIPE CARDS
     sec.querySelectorAll('.recipe-card').forEach(card => {
-      const match = !q || (card.textContent + (card.dataset.tags||'')).toLowerCase().includes(q);
+      const match = !q || (card.dataset.tags||'').toLowerCase().includes(q) || card.querySelector('h3,b,strong') && card.querySelector('h3,b,strong').textContent.toLowerCase().includes(q);
       card.classList.toggle('hidden', !match);
       if (match) total++;
     });
 
     // WTF CARDS
     sec.querySelectorAll('.wtf-card').forEach(card => {
-      const match = !q || (card.textContent + (card.dataset.tags||'')).toLowerCase().includes(q);
+      const match = !q || (card.dataset.tags||'').toLowerCase().includes(q) || card.querySelector('h3,b,strong,.wtf-title') && card.querySelector('h3,b,strong,.wtf-title').textContent.toLowerCase().includes(q);
       card.classList.toggle('hidden', !match);
       if (match) total++;
     });
