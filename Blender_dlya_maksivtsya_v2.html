@@ -251,6 +251,7 @@
   <div class="tab" data-tab="keys">🎹 Клавіатура</div>
   <div class="nav-group-title">MAX → BLENDER</div>
   <div class="tab" data-tab="max2blender">🔄 Словник Max→Blender</div>
+  <div class="tab" data-tab="matlib">🪨 Бібліотека матеріалів</div>
   <div class="nav-group-title">ІНСТРУМЕНТИ</div>
   <div class="tab" data-tab="recipes">🧪 Рецепти</div>
   <div class="tab" data-tab="wtf">🤯 WTF Max→Blender</div>
@@ -1105,6 +1106,185 @@
       <tr data-tags="architecture visualization archviz blender interior render community"><td><b>r/blenderarchviz</b></td><td class="how">Спільнота archviz на Blender</td><td class="note-col">WIP рендери, поради, матеріали</td></tr>
     </tbody>
   </table></div>
+</div>
+
+<!-- MATLIB -->
+<div class="section visible" data-section="matlib">
+  <div class="section-title">🪨 Бібліотека матеріалів — 30 базових для archviz</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:4px">Всі матеріали на <b>процедурних текстурах</b> — зовнішні файли не потрібні.</p>
+  <div style="background:rgba(79,124,255,.1);border:1px solid rgba(79,124,255,.3);border-radius:8px;padding:10px 14px;margin-bottom:20px;font-size:13px">
+    <b>Як додати всі матеріали в свій .blend:</b><br>
+    Blender → Scripting → Open →
+    <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-size:12px">E:\pROG\BlenderCheatSheet\create_materials.py</code>
+    → ▶ Run Script
+  </div>
+
+  <!-- МЕТАЛ -->
+  <div class="section-title" style="color:#aaa;margin-top:8px">⚙️ Метал</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:20px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,#d0d0d4 0%,#f0f0f2 40%,#a0a0a2 100%);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Metal_Chrome_Polished</b><br><span style="font-size:11px;color:var(--dim)">Metallic 1.0 · Roughness 0.03 · чистий хром</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,#8a8a8c 0%,#b2b2b5 30%,#6a6a6c 60%,#9a9a9d 100%);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Metal_Steel_Brushed</b><br><span style="font-size:11px;color:var(--dim)">Metallic 1.0 · Roughness 0.28 · Anisotropic 0.6</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,#5a2108 0%,#8a3a10 40%,#3a1005 100%);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Metal_Iron_Rusted</b><br><span style="font-size:11px;color:var(--dim)">Metallic 0.6 · Roughness 0.85 · Noise bump</span></div>
+    </div>
+  </div>
+
+  <!-- ДЕРЕВО -->
+  <div class="section-title" style="color:#aaa">🪵 Дерево</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:20px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:repeating-linear-gradient(88deg,#b88450 0px,#d4a870 4px,#c49460 8px,#b88450 12px);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Wood_Oak_Light</b><br><span style="font-size:11px;color:var(--dim)">Wave Rings · Roughness 0.65 · Bump 0.3</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:repeating-linear-gradient(88deg,#321808 0px,#5a2e10 5px,#402010 10px,#321808 15px);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Wood_Walnut_Dark</b><br><span style="font-size:11px;color:var(--dim)">Wave Rings · Roughness 0.60 · темний горіх</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:repeating-linear-gradient(88deg,#c8a466 0px,#e8c888 6px,#d4b478 12px,#c8a466 18px);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Wood_Pine_Raw</b><br><span style="font-size:11px;color:var(--dim)">Wave Rings · Roughness 0.72 · світла сосна</span></div>
+    </div>
+  </div>
+
+  <!-- БЕТОН -->
+  <div class="section-title" style="color:#aaa">🏗 Бетон</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:20px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:radial-gradient(ellipse at 20% 50%,#8a8a8a,#999,#7a7a7a,#9a9a9a,#888);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Concrete_Smooth</b><br><span style="font-size:11px;color:var(--dim)">Noise · Roughness 0.88 · Bump 0.4</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:radial-gradient(ellipse at 30% 60%,#6a6a68,#787874,#5a5a58,#707070,#686866);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Concrete_Rough</b><br><span style="font-size:11px;color:var(--dim)">Noise · Roughness 0.95 · Bump 1.2</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:radial-gradient(ellipse at 40% 40%,#7a7870,#858278,#6a6860,#7e7b72,#757270);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Concrete_Exposed</b><br><span style="font-size:11px;color:var(--dim)">Noise · Roughness 0.92 · архітектурний</span></div>
+    </div>
+  </div>
+
+  <!-- СКЛО -->
+  <div class="section-title" style="color:#aaa">🪟 Скло</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:20px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,rgba(180,210,240,.4) 0%,rgba(220,235,255,.7) 50%,rgba(160,200,230,.4) 100%);backdrop-filter:blur(2px);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Glass_Clear</b><br><span style="font-size:11px;color:var(--dim)">Transmission 1.0 · IOR 1.52 · Roughness 0.0</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,rgba(200,210,220,.6),rgba(215,222,230,.7),rgba(190,205,218,.6));border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Glass_Frosted</b><br><span style="font-size:11px;color:var(--dim)">Transmission 1.0 · IOR 1.50 · Roughness 0.18</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,rgba(30,90,60,.5),rgba(40,110,70,.65),rgba(20,80,55,.5));border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Glass_Tinted</b><br><span style="font-size:11px;color:var(--dim)">Transmission 1.0 · IOR 1.52 · зелений відтінок</span></div>
+    </div>
+  </div>
+
+  <!-- ТКАНИНА -->
+  <div class="section-title" style="color:#aaa">🛋 Тканина / Оббивка</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:20px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:repeating-linear-gradient(45deg,#e6e2dc 0px,#ece8e2 2px,#e0dcd6 4px);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Fabric_Cotton_White</b><br><span style="font-size:11px;color:var(--dim)">Roughness 0.92 · Sheen 0.3 · Noise bump</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,#404048,#484852,#383840);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Fabric_Velvet_Gray</b><br><span style="font-size:11px;color:var(--dim)">Roughness 0.85 · Sheen 1.0 · оксамит</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,#3a2010,#50300a,#2e1808);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Fabric_Leather_Brown</b><br><span style="font-size:11px;color:var(--dim)">Roughness 0.55 · Sheen 0.1 · Noise bump</span></div>
+    </div>
+  </div>
+
+  <!-- МАРМУР / КАМІНЬ -->
+  <div class="section-title" style="color:#aaa">🏛 Мармур / Камінь</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:20px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(80deg,#f2f0ec,#e8e2da,#f5f2ee,#d8d0c8,#f0ece6);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Stone_Marble_White</b><br><span style="font-size:11px;color:var(--dim)">Wave + Noise · Roughness 0.08 · прожилки</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(80deg,#0a0a0c,#201e1c,#080808,#2a2826,#100e0c);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Stone_Marble_Black</b><br><span style="font-size:11px;color:var(--dim)">Wave + Noise · Roughness 0.10 · чорний мармур</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:radial-gradient(ellipse,#6e6c68,#7a7874,#626058,#747270,#686664);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Stone_Granite_Gray</b><br><span style="font-size:11px;color:var(--dim)">Wave + Noise · Roughness 0.40 · граніт</span></div>
+    </div>
+  </div>
+
+  <!-- ШТУКАТУРКА -->
+  <div class="section-title" style="color:#aaa">🏠 Штукатурка / Фарба</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:20px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:radial-gradient(ellipse at 30% 40%,#eae8e4,#e0deda,#ece9e5,#d8d6d2,#e4e2de);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Plaster_White_Smooth</b><br><span style="font-size:11px;color:var(--dim)">Noise · Roughness 0.90 · Bump 0.3</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:radial-gradient(ellipse at 50% 60%,#dcdad4,#cac8c2,#d8d6d0,#c4c2bc,#d0cec8);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Plaster_White_Rough</b><br><span style="font-size:11px;color:var(--dim)">Noise · Roughness 0.95 · Bump 0.9</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,#f2f2f2,#fafafa,#eeeee);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Paint_Glossy_White</b><br><span style="font-size:11px;color:var(--dim)">Roughness 0.08 · глянцева фарба</span></div>
+    </div>
+  </div>
+
+  <!-- ПІДЛОГА -->
+  <div class="section-title" style="color:#aaa">🟫 Підлога</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:20px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:repeating-linear-gradient(0deg,transparent 0px,transparent 18px,#888 18px,#888 20px),repeating-linear-gradient(90deg,#dedcda 0px,#dedcda 38px,#888 38px,#888 40px);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Floor_Ceramic_White</b><br><span style="font-size:11px;color:var(--dim)">Brick node · Roughness 0.15 · затирка</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:repeating-linear-gradient(0deg,transparent 0px,transparent 18px,#111 18px,#111 20px),repeating-linear-gradient(90deg,#1c1a18 0px,#1c1a18 38px,#111 38px,#111 40px);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Floor_Ceramic_Dark</b><br><span style="font-size:11px;color:var(--dim)">Brick node · Roughness 0.20 · темна плитка</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:repeating-linear-gradient(0deg,transparent 0px,transparent 18px,#5a5550 18px,#5a5550 20px),repeating-linear-gradient(90deg,#8a8078 0px,#8a8078 38px,#5a5550 38px,#5a5550 40px);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Floor_Stone_Natural</b><br><span style="font-size:11px;color:var(--dim)">Brick node · Roughness 0.60 · природний камінь</span></div>
+    </div>
+  </div>
+
+  <!-- ЕМІСІЯ -->
+  <div class="section-title" style="color:#aaa">💡 Емісія (світіння)</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:20px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,#fff8e0,#fffae8,#fff4d0);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Emissive_Warm_Light</b><br><span style="font-size:11px;color:var(--dim)">Emission Strength 5.0 · теплий 3000K</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,#e8f0ff,#f0f4ff,#dce8ff);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Emissive_Cool_Light</b><br><span style="font-size:11px;color:var(--dim)">Emission Strength 5.0 · холодний 6500K</span></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+      <div style="height:52px;background:linear-gradient(135deg,#ffffff,#f8f8ff,#f0f0ff);border-bottom:1px solid var(--border)"></div>
+      <div style="padding:10px 12px"><b style="font-size:13px">Emissive_LED_White</b><br><span style="font-size:11px;color:var(--dim)">Emission Strength 10.0 · LED панель</span></div>
+    </div>
+  </div>
+
+  <!-- Підказки -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:8px">
+    <div class="section-title" style="margin-bottom:8px">💡 Як застосувати матеріал на об'єкт</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Спосіб</th><th>Як</th></tr></thead>
+      <tbody>
+        <tr data-tags="material apply drag drop assign object"><td>Через Material Properties</td><td class="how">Виділи об'єкт → Properties (кулька) → Material → Browse → вибери зі списку</td></tr>
+        <tr data-tags="material drag drop apply assign link"><td>Drag & Drop з Outliner</td><td class="how">Outliner (вибери Materials filter) → тягни матеріал на об'єкт у вьюпорті</td></tr>
+        <tr data-tags="material copy paste transfer object link"><td>Скопіювати з іншого об'єкта</td><td class="how">Виділи джерело → Shift+виділи ціль → Ctrl+L → Link Materials</td></tr>
+        <tr data-tags="material append blend file import from"><td>Append з іншого .blend</td><td class="how">File → Append → вибери .blend → Materials → вибери потрібний</td></tr>
+      </tbody>
+    </table></div>
+  </div>
 </div>
 
 <!-- MAX2BLENDER -->
