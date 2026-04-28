@@ -249,6 +249,8 @@
   <div class="nav-group-title">⌨️ SHORTCUTS</div>
   <div class="tab" data-tab="shortcuts">⌨️ Quick Keys</div>
   <div class="tab" data-tab="keys">🎹 Клавіатура</div>
+  <div class="nav-group-title">MAX → BLENDER</div>
+  <div class="tab" data-tab="max2blender">🔄 Словник Max→Blender</div>
   <div class="nav-group-title">ІНСТРУМЕНТИ</div>
   <div class="tab" data-tab="recipes">🧪 Рецепти</div>
   <div class="tab" data-tab="wtf">🤯 WTF Max→Blender</div>
@@ -1098,6 +1100,265 @@
       <tr data-tags="architecture visualization archviz blender interior render community"><td><b>r/blenderarchviz</b></td><td class="how">Спільнота archviz на Blender</td><td class="note-col">WIP рендери, поради, матеріали</td></tr>
     </tbody>
   </table></div>
+</div>
+
+<!-- MAX2BLENDER -->
+<div class="section visible" data-section="max2blender">
+  <div class="section-title">🔄 Словник 3DS Max → Blender (Archviz)</div>
+  <p style="color:var(--dim);font-size:13px;margin-bottom:16px">Введи назву з Max у пошук (вгорі) — отримаєш відповідь в Blender. Або листай нижче по категоріях.</p>
+
+  <!-- INTERFACE -->
+  <div class="section-title" style="color:var(--accent);margin-top:8px">🖥 Інтерфейс і UI</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max</th><th>Blender</th><th>Примітки</th></tr></thead>
+    <tbody>
+      <tr data-tags="command panel properties max interface ui panel right"><td>Command Panel (правий)</td><td class="how">Properties Editor (права колонка) + N-panel (<kbd>N</kbd>)</td><td class="note-col">У Blender Properties Editor — набір іконок-вкладок зліва</td></tr>
+      <tr data-tags="modifier panel stack modifiers list max"><td>Modifier Stack (список модифікаторів)</td><td class="how">Properties → Wrench icon (Modifier Properties)</td><td class="note-col">Той самий принцип стеку зверху вниз</td></tr>
+      <tr data-tags="material editor slate compact node max"><td>Material Editor (Slate / Compact)</td><td class="how">Shader Editor (<kbd>Shift+F3</kbd>)</td><td class="note-col">Node-based, як Slate ME. Ctrl+Shift+T (Node Wrangler) = авто підключення PBR</td></tr>
+      <tr data-tags="track view curve editor animation dope sheet max"><td>Track View / Curve Editor</td><td class="how">Dope Sheet (<kbd>Shift+F12</kbd>) / Graph Editor (<kbd>Shift+F6</kbd>)</td><td class="note-col">Shift+F12 = ключові кадри, Shift+F6 = криві</td></tr>
+      <tr data-tags="asset library max browser content explorer"><td>Asset Library / Content Explorer</td><td class="how">Asset Browser (Blender 4.x)</td><td class="note-col">Window → Editor Type → Asset Browser</td></tr>
+      <tr data-tags="layers groups scene management visibility max"><td>Layers (управління видимістю)</td><td class="how">Collections (Outliner)</td><td class="note-col">M = перемістити в колекцію. Ctrl+G = нова колекція</td></tr>
+      <tr data-tags="group objects together hierarchy max"><td>Group</td><td class="how">Collection (<kbd>Ctrl+G</kbd>)</td><td class="note-col">Instance колекції = Alt+D на collection instance</td></tr>
+      <tr data-tags="schematic view hierarchy node tree max"><td>Schematic View</td><td class="how">Outliner (ієрархія) або Node Editor (матеріали)</td><td class="note-col">Outliner показує Parent/Child зв'язки</td></tr>
+      <tr data-tags="render setup f10 render dialog max settings"><td>Render Setup (F10)</td><td class="how">Render Properties (іконка камери)</td><td class="note-col">Там все: движок, семплинг, вивід</td></tr>
+      <tr data-tags="quad menu right click context popup max"><td>Quad Menu (ПКМ)</td><td class="how">Context Menu (<kbd>ПКМ</kbd>) + Pie Menus</td><td class="note-col">W = Object Context Menu, Z = Display pie</td></tr>
+      <tr data-tags="snap panel toolbar toggle grid max"><td>Snap Toolbar / Grid Snap</td><td class="how"><kbd>Shift+Tab</kbd> або кнопка магніту у хедері</td><td class="note-col">Ctrl утримувати під час G/R/S = тимчасовий snap</td></tr>
+      <tr data-tags="xref scene external reference link max"><td>XRef Scene / XRef Object</td><td class="how">File → Link (або Append)</td><td class="note-col">Link = зв'язок зберігається. Append = копія</td></tr>
+      <tr data-tags="merge file import scene max blend"><td>Merge (злити файли)</td><td class="how">File → Append</td><td class="note-col">Вибираєш конкретні об'єкти/матеріали з .blend</td></tr>
+      <tr data-tags="scene states render presets views max"><td>Scene States</td><td class="how">Scenes + View Layers</td><td class="note-col">View Layer = набір колекцій + налаштування рендеру</td></tr>
+      <tr data-tags="environment background color fog max"><td>Environment (Background / Fog)</td><td class="how">World Properties (іконка глобуса)</td><td class="note-col">World → Background → Environment Texture (HDRI)</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- MODELING -->
+  <div class="section-title" style="color:var(--accent);margin-top:24px">🔧 Моделювання</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max</th><th>Blender</th><th>Примітки</th></tr></thead>
+    <tbody>
+      <tr data-tags="editable poly mesh edit sub-object max tab"><td>Editable Poly / Editable Mesh</td><td class="how">Edit Mode (<kbd>Tab</kbd>)</td><td class="note-col">Tab = перемикач Object ↔ Edit Mode</td></tr>
+      <tr data-tags="sub-object levels vertex edge border polygon element max 1 2 3 4 5"><td>Sub-Object levels (1/2/3/4/5)</td><td class="how"><kbd>1</kbd> Vertex / <kbd>2</kbd> Edge / <kbd>3</kbd> Face</td><td class="note-col">Border і Element = окремі команди (Select Boundary Loop, Select Linked)</td></tr>
+      <tr data-tags="attach join objects together max ctrl j"><td>Attach (приєднати об'єкт)</td><td class="how"><kbd>Ctrl+J</kbd> (Object Mode)</td><td class="note-col">Виділи всі об'єкти → Ctrl+J</td></tr>
+      <tr data-tags="detach separate faces vertices max p"><td>Detach (відокремити)</td><td class="how"><kbd>P</kbd> → Selection / By Material / Loose Parts</td><td class="note-col">Edit Mode → виділи → P</td></tr>
+      <tr data-tags="extrude face edge vertex e max"><td>Extrude</td><td class="how"><kbd>E</kbd></td><td class="note-col">Alt+E = меню (Along Normals / Individual Faces)</td></tr>
+      <tr data-tags="bevel chamfer edge ctrl b max fillet round"><td>Chamfer / Bevel ребер</td><td class="how"><kbd>Ctrl+B</kbd></td><td class="note-col">Scroll = кількість сегментів. P = форма профілю <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="bevel vertex corner chamfer ctrl shift b max"><td>Chamfer вершини</td><td class="how"><kbd>Ctrl+Shift+B</kbd></td><td class="note-col">Rounded vertex corner</td></tr>
+      <tr data-tags="connect edge loop cut ctrl r insert max"><td>Connect (вставити edge loop)</td><td class="how"><kbd>Ctrl+R</kbd></td><td class="note-col">Scroll = кількість петель. ПКМ = по центру</td></tr>
+      <tr data-tags="inset polygon face i border interior max offset"><td>Inset (відступ полігону)</td><td class="how"><kbd>I</kbd></td><td class="note-col">I → B = Individual (кожна грань окремо)</td></tr>
+      <tr data-tags="bridge connect two borders loops ctrl e max"><td>Bridge (з'єднати два краї)</td><td class="how"><kbd>Ctrl+E</kbd> → Bridge Edge Loops</td><td class="note-col">Виділи дві edge loop → Bridge</td></tr>
+      <tr data-tags="target weld snap vertex merge m max"><td>Target Weld</td><td class="how"><kbd>M</kbd> → At Last / By Distance</td><td class="note-col">Merge by Distance = авто-weld дублікатів</td></tr>
+      <tr data-tags="remove doubles weld distance clean duplicate vertices max"><td>Remove Doubles</td><td class="how">Mesh → Merge by Distance</td><td class="note-col">Alt+M → By Distance (старий спосіб)</td></tr>
+      <tr data-tags="cut knife free draw k max slice"><td>Cut (вільний розріз)</td><td class="how"><kbd>K</kbd> (Knife)</td><td class="note-col">Enter = підтвердити. Z = cut through. C = angle snap</td></tr>
+      <tr data-tags="quickslice slice plane bisect cut flat max"><td>QuickSlice / Slice Plane</td><td class="how">Mesh → Bisect</td><td class="note-col">Fill = заповнити. Clear Inner/Outer = видалити частину</td></tr>
+      <tr data-tags="fill cap hole polygon f close open border max"><td>Fill / Cap Hole</td><td class="how"><kbd>F</kbd></td><td class="note-col">Alt+F = Tri Fill. Ctrl+F → Grid Fill = красиві квади <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="collapse merge polygon edge vertex max"><td>Collapse (стиснути в точку)</td><td class="how"><kbd>M</kbd> → Collapse (або Ctrl+X dissolve)</td><td class="note-col">Ctrl+X = розчинити edge loop зберігаючи форму</td></tr>
+      <tr data-tags="delete remove x vertices face edge max dissolve"><td>Delete геометрії</td><td class="how"><kbd>X</kbd> → меню</td><td class="note-col">Dissolve = видалити без дірки. Delete = з дірою</td></tr>
+      <tr data-tags="flip normals recalculate alt n shift n max direction"><td>Flip Normals / Unify Normals</td><td class="how"><kbd>Alt+N</kbd> → Flip / <kbd>Shift+N</kbd> Recalculate</td><td class="note-col">Shift+N = авто назовні</td></tr>
+      <tr data-tags="make planar flatten vertices align same height level z max"><td>Make Planar / Flatten</td><td class="how"><kbd>S</kbd> → Z → 0 (scale to 0) або LoopTools Flatten</td><td class="note-col">Вирівнює по осі. LoopTools addon має Flatten</td></tr>
+      <tr data-tags="align vertices objects snap position max same level"><td>Align Objects / Vertices</td><td class="how">Object → Transform → Align Objects або <kbd>S</kbd>→axis→0</td><td class="note-col"></td></tr>
+      <tr data-tags="vertex color paint max attribute"><td>Vertex Colors</td><td class="how">Attribute (Color Attribute) → Vertex Paint Mode</td><td class="note-col">Object Data Properties → Color Attributes</td></tr>
+      <tr data-tags="edge crease subdivision weight max shift e"><td>Edge Crease (вага для Subdivision)</td><td class="how"><kbd>Shift+E</kbd></td><td class="note-col">1.0 = гострий кут у Subdivision Surface</td></tr>
+      <tr data-tags="soft selection proportional falloff radius max o"><td>Soft Selection</td><td class="how">Proportional Editing (<kbd>O</kbd>)</td><td class="note-col">Scroll = радіус впливу. Типи: Smooth / Sphere / Root тощо</td></tr>
+      <tr data-tags="paint deform max push pull brush mesh editing"><td>Paint Deformation (пензлями)</td><td class="how">Sculpt Mode (<kbd>Ctrl+Tab</kbd>)</td><td class="note-col">Grab, Smooth, Inflate, Flatten тощо</td></tr>
+      <tr data-tags="morpher shape animation blend max shape keys"><td>Morpher / Shape Keys</td><td class="how">Object Data Properties → Shape Keys</td><td class="note-col">+ = нова shape key. Value = вага (0–1)</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- MODIFIERS -->
+  <div class="section-title" style="color:var(--accent);margin-top:24px">📦 Модифікатори</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max (модифікатор)</th><th>Blender (еквівалент)</th><th>Примітки</th></tr></thead>
+    <tbody>
+      <tr data-tags="turbosmooth meshsmooth subdivision smooth sub-d max catmull"><td>TurboSmooth / MeshSmooth</td><td class="how">Subdivision Surface modifier (Catmull-Clark)</td><td class="note-col">Рівні 0–6. Shift+E = crease для гострих країв <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="shell solidify thickness wall inside outside max"><td>Shell</td><td class="how">Solidify modifier</td><td class="note-col">Додає товщину поверхні. Fill Rim = шов зверху</td></tr>
+      <tr data-tags="mirror symmetry x y z axis max modifier"><td>Mirror / Symmetry</td><td class="how">Mirror modifier</td><td class="note-col">Clipping = вершини не виходять за вісь симетрії</td></tr>
+      <tr data-tags="array linear radial count offset max modifier"><td>Array (лінійний / радіальний)</td><td class="how">Array modifier</td><td class="note-col">Object Offset = масиву по об'єкту (для дуги)</td></tr>
+      <tr data-tags="boolean cut subtract union intersect max modifier proboolean"><td>Boolean / ProBoolean</td><td class="how">Boolean modifier / Bool Tool addon</td><td class="note-col">Bool Tool addon (Ctrl+Minus = Subtract) набагато зручніший <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="ffd free form deform lattice 2x2 3x3 4x4 max modifier"><td>FFD 2×2, 3×3, 4×4</td><td class="how">Lattice modifier</td><td class="note-col">Add → Lattice → Modifier → Lattice. Виділи Lattice → Tab → рухай точки</td></tr>
+      <tr data-tags="bend deform simple deform max modifier"><td>Bend</td><td class="how">Simple Deform modifier → Bend</td><td class="note-col">Встанови Empty як Origin для осі згину</td></tr>
+      <tr data-tags="twist deform simple deform max modifier"><td>Twist</td><td class="how">Simple Deform modifier → Twist</td><td class="note-col"></td></tr>
+      <tr data-tags="taper deform simple deform stretch max modifier"><td>Taper / Stretch</td><td class="how">Simple Deform modifier → Taper / Stretch</td><td class="note-col"></td></tr>
+      <tr data-tags="noise displace texture displacement max modifier bump deform"><td>Noise (деформація)</td><td class="how">Displace modifier + Texture (Noise)</td><td class="note-col">Add → Texture (Noise) → Displace modifier → вибери текстуру</td></tr>
+      <tr data-tags="displace map displacement deform terrain max modifier"><td>Displace</td><td class="how">Displace modifier</td><td class="note-col">Texture = будь-яка карта (B&W). Strength = сила</td></tr>
+      <tr data-tags="prooptimizer optimize polygon reduce decimate max modifier"><td>ProOptimizer / Optimize</td><td class="how">Decimate modifier</td><td class="note-col">Ratio = відсоток полігонів. Planar = зберігає пласкі поверхні</td></tr>
+      <tr data-tags="lathe spin revolve screw axis max modifier spline"><td>Lathe (обертання профілю)</td><td class="how">Screw modifier</td><td class="note-col">Add Plane (профіль) → Screw modifier. Angle=360 = повна форма</td></tr>
+      <tr data-tags="sweep spline profile path curve bevel max modifier"><td>Sweep (профіль по шляху)</td><td class="how">Curve object → Geometry → Bevel Object</td><td class="note-col">Або: Curve + окремий профіль-curve → assign в Bevel Object <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="loft multi section spline path max modifier surface"><td>Loft (по кількох перерізах)</td><td class="how">LoopTools → Loft / Skin modifier</td><td class="note-col">Skin modifier = по вертексам. LoopTools Loft = по виділеним петлям</td></tr>
+      <tr data-tags="skin bone wire modifier character max"><td>Skin modifier</td><td class="how">Skin modifier (є вбудований)</td><td class="note-col">Аналогічний! Ctrl+A = радіус вертекса</td></tr>
+      <tr data-tags="path deform curve modifier along path rail max"><td>Path Deform</td><td class="how">Curve modifier</td><td class="note-col">Об'єкт "їде" по curve. Axis = напрямок</td></tr>
+      <tr data-tags="uvw map unwrap modifier projection box spherical cylindrical max"><td>UVW Map modifier</td><td class="how">UV Unwrap (Smart Project / Box / Sphere)</td><td class="note-col">Edit Mode → UV → Smart UV Project / Box Projection</td></tr>
+      <tr data-tags="uvw unwrap modifier manual seam max editor"><td>UVW Unwrap modifier</td><td class="how">UV Editor (вручну, з seams)</td><td class="note-col">Ctrl+E → Mark Seam → UV → Unwrap <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="smooth modifier shade auto flat max normals"><td>Smooth modifier (Shade Smooth)</td><td class="how">ПКМ → Shade Smooth / Shade Auto Smooth</td><td class="note-col">Auto Smooth (кут) = тільки де кут > N градусів</td></tr>
+      <tr data-tags="weighted normal modifier max hard surface bevel"><td>Weighted Normal modifier</td><td class="how">Weighted Normal modifier (є вбудований)</td><td class="note-col">Зберігає нормалі бевелів. Ставити останнім у стеку</td></tr>
+      <tr data-tags="cloth simulation modifier fabric soft body max physics"><td>Cloth modifier</td><td class="how">Cloth simulation (Physics Properties → Cloth)</td><td class="note-col">Space = запустити симуляцію. Bake = записати</td></tr>
+      <tr data-tags="hair fur particles grass modifier max scatter groom"><td>Hair and Fur modifier</td><td class="how">Particle System → Hair / Geometry Nodes Hair (4.x)</td><td class="note-col">Geometry Nodes Hair = повний контроль і non-destructive <span class="tag tip">ТІП</span></td></tr>
+      <tr data-tags="stl check mesh analysis errors manifold max print"><td>STL Check</td><td class="how">3D Print Toolbox addon → Check All</td><td class="note-col">Знаходить non-manifold, zero-faces, overlapping</td></tr>
+      <tr data-tags="surface deform wrap cloth transfer max modifier"><td>Surface Deform / Skin Wrap</td><td class="how">Surface Deform modifier</td><td class="note-col">Bind один меш до іншого</td></tr>
+      <tr data-tags="shrinkwrap conform surface project modifier max"><td>Conform / Shrinkwrap</td><td class="how">Shrinkwrap modifier</td><td class="note-col">Project = кидає по нормалях. Closest Point = прилипає</td></tr>
+      <tr data-tags="multires multiresolution sculpt modifier max zbrush levels"><td>MeshSmooth (для sculpt)</td><td class="how">Multires modifier</td><td class="note-col">Subdivision рівні для скульптингу без руйнування base mesh</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- SPLINES / CURVES -->
+  <div class="section-title" style="color:var(--accent);margin-top:24px">〰 Сплайни / Криві</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max</th><th>Blender</th><th>Примітки</th></tr></thead>
+    <tbody>
+      <tr data-tags="spline line bezier curve draw max add"><td>Spline / Line</td><td class="how">Add → Curve → Bezier або Path</td><td class="note-col">Poly Curve = без кривизни (як Line в Max)</td></tr>
+      <tr data-tags="rectangle spline shape max curve closed"><td>Rectangle spline</td><td class="how">Add → Curve → Rectangle (або Shift+A у Curve edit)</td><td class="note-col">Або Add → Mesh → Plane → Edit Mode → видали грані</td></tr>
+      <tr data-tags="circle spline shape arc round max curve"><td>Circle spline</td><td class="how">Add → Curve → Circle</td><td class="note-col"></td></tr>
+      <tr data-tags="editable spline edit curve sub-object vertex knot max tab"><td>Editable Spline (редагування)</td><td class="how">Tab (Edit Mode на Curve)</td><td class="note-col">1 = Points, 2 = Segments, 3 = Splines (по аналогії)</td></tr>
+      <tr data-tags="renderable spline thickness round square max render visible"><td>Renderable Spline (товщина)</td><td class="how">Curve Properties → Geometry → Bevel → Round / Depth</td><td class="note-col">Depth = радіус труби. Resolution = кількість сегментів труби <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="outline spline inset parallel offset max curve edit"><td>Outline spline</td><td class="how">Curve Edit Mode → Ctrl+O (Offset Edges) або окремий спосіб через Ctrl+Inset</td><td class="note-col">Або: Solidify modifier → Offset для кривих</td></tr>
+      <tr data-tags="boolean spline shape max subtract union trim 2d"><td>Boolean splines / Shape Boolean</td><td class="how">2D Curves з Geometry → Fill Mode → Both, потім Boolean modifier</td><td class="note-col">Для 2D логотипів і форм</td></tr>
+      <tr data-tags="attach splines join combine curves max"><td>Attach сплайнів</td><td class="how">Ctrl+J (Object Mode) або Tab → виділи → Ctrl+J</td><td class="note-col"></td></tr>
+      <tr data-tags="convert spline to mesh editable poly max alt c"><td>Convert Spline → Mesh</td><td class="how">Object → Convert → Mesh (<kbd>Alt+C</kbd> або ПКМ)</td><td class="note-col">Незворотньо. Ctrl+Z щоб повернутись</td></tr>
+      <tr data-tags="helix spiral curve screw max spline"></td><tr data-tags="helix spiral curve screw max spline"><td>Helix (спіраль)</td><td class="how">Add → Curve → Spiral (Blender 4.x) або Screw modifier на вертикальній лінії</td><td class="note-col"></td></tr>
+      <tr data-tags="nurbs curve surface max smooth patch"><td>NURBS Curve / Surface</td><td class="how">Add → Surface → NURBS Surface / NURBS Curve</td><td class="note-col">Менш поширено в Blender — частіше Bezier</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- LIGHTS -->
+  <div class="section-title" style="color:var(--accent);margin-top:24px">💡 Освітлення</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max / V-Ray</th><th>Blender / Cycles</th><th>Примітки</th></tr></thead>
+    <tbody>
+      <tr data-tags="omni point light max vray standard"><td>Omni Light</td><td class="how">Add → Light → Point</td><td class="note-col">Radius = м'якість тіні</td></tr>
+      <tr data-tags="target spot spotlight max standard vray cone"><td>Target Spot / Free Spot</td><td class="how">Add → Light → Spot</td><td class="note-col">Spot Angle = кут конусу. Blend = м'якість краю</td></tr>
+      <tr data-tags="target direct sun parallel directional max standard"><td>Target Direct (сонце)</td><td class="how">Add → Light → Sun</td><td class="note-col">Angle = м'якість тіні. Strength = яскравість</td></tr>
+      <tr data-tags="vray sun vraysunsystem hdri sky archviz max outdoor"><td>VRaySun</td><td class="how">Sun Light + World → Sky Texture (Nishita)</td><td class="note-col">Sun Elevation + Rotation = позиція сонця. Або HDRI <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="vray plane area light rectangular max vraylight"><td>VRayLight (Plane / Rectangle)</td><td class="how">Add → Light → Area</td><td class="note-col">Shape = Rectangle/Disk/Square. Size = розмір = м'якість тіні <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="vray sphere light round ball max"><td>VRayLight (Sphere)</td><td class="how">Add → Light → Point + Radius</td><td class="note-col">Або: меш-сфера з Emission шейдером</td></tr>
+      <tr data-tags="vray dome hdri ibl environment world max vraylight"><td>VRayLight (Dome / HDRI)</td><td class="how">World Properties → Background → Environment Texture</td><td class="note-col">Rotation = Mapping → Rotation Z. Strength = яскравість HDRI <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="vray mesh light emissive material self illumination max emission"><td>VRayLight (Mesh) / Self-Illumination</td><td class="how">Emission shader на об'єкті</td><td class="note-col">Principled BSDF → Emission Color + Strength. Або окремий Emission shader</td></tr>
+      <tr data-tags="vray ies light photometric max fixture lamp indoor"><td>VRayIES / Photometric (IES)</td><td class="how">Add → Light → Point → Shadow → IES Texture</td><td class="note-col">Light Properties → Nodes → завантаж .ies файл <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="light include exclude shadow casting object visibility max"><td>Light Include / Exclude</td><td class="how">Light Linking (Blender 4.1+)</td><td class="note-col">Object Properties → Visibility → Light Linking — нова фіча!</td></tr>
+      <tr data-tags="shadow map area soft shadow max ray traced"><td>Shadow Maps / Area Shadows</td><td class="how">Автоматично в Cycles (ray tracing)</td><td class="note-col">Налаштувань немає — розмір джерела = м'якість тіні</td></tr>
+      <tr data-tags="light lister all lights dialog max scene list"><td>Light Lister</td><td class="how">Outliner → Filter → Light або Spreadsheet Editor</td><td class="note-col">N → Scene → All кнопки в Properties теж</td></tr>
+      <tr data-tags="vray ambient light fill global max bounce gi"><td>VRayAmbientLight / Fill Light GI</td><td class="how">World → Background Strength (непряме освітлення автоматичне)</td><td class="note-col">В Cycles GI = автоматично через Path Tracing</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- CAMERA -->
+  <div class="section-title" style="color:var(--accent);margin-top:24px">📷 Камера</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max / V-Ray</th><th>Blender / Cycles</th><th>Примітки</th></tr></thead>
+    <tbody>
+      <tr data-tags="target camera free camera add max vray physical"><td>Target Camera / Free Camera</td><td class="how">Add → Camera (<kbd>Shift+A</kbd>)</td><td class="note-col">Numpad 0 = вид з камери. G → рух камерою</td></tr>
+      <tr data-tags="vray physical camera exposure iso shutter fstop max real"><td>VRayPhysicalCamera (ISO/Shutter/F-Stop)</td><td class="how">Camera Properties → Exposure → Physical Camera</td><td class="note-col">Enable Exposure checkbox. ISO, Shutter Speed, f-Stop <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="camera target constraint look at track to max empty"><td>Camera Target (куди дивиться)</td><td class="how">Camera → Object Constraint → Track To → Empty</td><td class="note-col">Add Empty (Plain Axes) → Camera → Constraints → Track To</td></tr>
+      <tr data-tags="safe frames composition guide camera overlay max"><td>Safe Frames / Composition Guides</td><td class="how">Camera view (Numpad 0) → N panel → View → Guides</td><td class="note-col">Overlay → Show Safe Areas. Thirds / Golden Ratio / Center</td></tr>
+      <tr data-tags="camera correction modifier tilt shift vertical architectural max"><td>Camera Correction modifier (Tilt-Shift)</td><td class="how">Camera Properties → Shift X / Shift Y</td><td class="note-col">Вертикальні лінії паралельні = архітектурний вид <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="depth of field dof bokeh blur background foreground max camera vray"><td>Depth of Field (розмиття)</td><td class="how">Camera Properties → Depth of Field → F-Stop</td><td class="note-col">Focus Object = вибери на що фокусуватись. <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="motion blur camera object max render speed"><td>Motion Blur</td><td class="how">Render Properties → Motion Blur → Shutter</td><td class="note-col">Тільки в Cycles. Shutter = тривалість розмиття</td></tr>
+      <tr data-tags="clipping near far plane camera visibility max"><td>Clipping Planes (Near/Far)</td><td class="how">Camera Properties → Clip Start / Clip End</td><td class="note-col">Clip Start надто мало = Z-fighting в інтер'єрах</td></tr>
+      <tr data-tags="field of view fov focal length lens angle camera max mm"><td>FOV / Focal Length</td><td class="how">Camera Properties → Focal Length (мм)</td><td class="note-col">24мм = wide, 50мм = стандарт, 85мм = portrait</td></tr>
+      <tr data-tags="multi pass camera render passes beauty max vray elements"><td>Multi-Pass rendering</td><td class="how">View Layer Properties → Passes</td><td class="note-col">Diffuse, Glossy, Shadow, AO, Z-depth, Cryptomatte тощо</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- MATERIALS -->
+  <div class="section-title" style="color:var(--accent);margin-top:24px">🎨 Матеріали (V-Ray → Cycles)</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max / V-Ray</th><th>Blender / Cycles</th><th>Примітки</th></tr></thead>
+    <tbody>
+      <tr data-tags="vraymtl vray material standard pbr blender principled bsdf"><td>VRayMtl / Standard Material</td><td class="how">Principled BSDF (шейдер за замовчуванням)</td><td class="note-col">Diffuse = Base Color. Reflect Glossiness = 1-Roughness. IOR = IOR <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="vray blend material mix layer coat max shader"><td>VRayBlendMtl (шари матеріалів)</td><td class="how">Mix Shader node</td><td class="note-col">Fac = маска суміші. Можна стакувати кілька Mix Shader</td></tr>
+      <tr data-tags="vray light material emissive self illumination glow max emission shader"><td>VRayLightMtl / Self-Illumination</td><td class="how">Emission Shader або Principled BSDF → Emission Color</td><td class="note-col">Strength = яскравість. Для LED/неону <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="vray sss subsurface fast scatter skin marble max"><td>VRayFastSSS2 (підповерхневе розсіювання)</td><td class="how">Principled BSDF → Subsurface Weight + Subsurface Color</td><td class="note-col">Шкіра, мармур, молоко, воскові поверхні</td></tr>
+      <tr data-tags="vray 2sided twosided translucent thin surface leaf fabric max"><td>VRay2SidedMtl (тонкі поверхні)</td><td class="how">Principled BSDF → Transmission Weight або Translucent BSDF</td><td class="note-col">Листя, шторки, папір — Transmission Weight + тонкий меш</td></tr>
+      <tr data-tags="vray carpaint car paint metallic two-tone flakes max"><td>VRayCarpaintMtl</td><td class="how">Principled BSDF → Metallic=1 + Roughness + Coat Weight/Roughness</td><td class="note-col">Coat = лак поверх бази. Шинки, глянцевий лак</td></tr>
+      <tr data-tags="vray override material max holdout matte shadow render override"><td>VRayOverrideMtl</td><td class="how">Holdout shader / Object → Visibility → Holdout</td><td class="note-col">Або Light Path node → Is Shadow Ray → Mix Shader</td></tr>
+      <tr data-tags="multi sub object material id face max slots shader"><td>Multi/Sub-Object Material</td><td class="how">Material Slots (+ кнопка в Material Properties)</td><td class="note-col">Edit Mode → виділи грані → Assign відповідний слот <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="normal map bump texture node max tangent space"><td>Normal Map</td><td class="how">Image Texture → Normal Map node → Principled BSDF Normal</td><td class="note-col">Ctrl+Shift+T (Node Wrangler) підключить автоматично</td></tr>
+      <tr data-tags="bump map height grayscale texture max node"><td>Bump Map</td><td class="how">Image Texture → Bump node → Principled BSDF Normal</td><td class="note-col">Bump node: Strength та Distance = сила ефекту</td></tr>
+      <tr data-tags="displacement map texture render max true geometry height"><td>Displacement map (render)</td><td class="how">Displacement node → Material Output + Material Settings → Displacement: Both</td><td class="note-col">Material Properties → Settings → Displacement = Displacement Only / Both <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="opacity map alpha cutout transparency texture max"><td>Opacity Map / Alpha Cutout</td><td class="how">Image Texture (Alpha) → Principled BSDF Alpha + Blend Mode: Alpha Clip/Hashed</td><td class="note-col">Material → Blend Mode = Alpha Clip (чіткий) або Hashed (м'який) <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="falloff map fresnel facing grazing angle max node incidence"><td>Falloff Map (Fresnel / Facing)</td><td class="how">Layer Weight node → Facing або Fresnel</td><td class="note-col">Facing = градієнт за кутом погляду. Fresnel = фізичний</td></tr>
+      <tr data-tags="composite mix color correction map max node combine"><td>Composite / Mix Map</td><td class="how">Mix Color node або Mix Shader</td><td class="note-col">Factor = маска. Mode: Mix / Multiply / Screen / Overlay тощо</td></tr>
+      <tr data-tags="color correction map hue saturation brightness gamma max node"><td>Color Correction Map</td><td class="how">Hue/Saturation/Value node + Curves node</td><td class="note-col"></td></tr>
+      <tr data-tags="uvw map modifier generated box sphere cylindrical projection max material"><td>UVW Map (Box/Sphere/Cylindrical)</td><td class="how">Texture Coordinate node → Box/Sphere/Cylindrical або UV Unwrap</td><td class="note-col">Texture Coordinate (Generated/Object/UV) → Mapping node → Image Texture</td></tr>
+      <tr data-tags="tile repeat texture scale uvw map max tiling"><td>Tile / Tiling текстури</td><td class="how">Mapping node → Scale X/Y</td><td class="note-col">Scale 2.0 = удвічі більший тайл. Shift = зміщення</td></tr>
+      <tr data-tags="vray glossy reflect blur roughness blurry reflection max material"><td>Reflection Glossiness (blurry reflect)</td><td class="how">Principled BSDF → Roughness</td><td class="note-col">V-Ray: 1.0 = чистий. Blender: 0.0 = чистий (інверсія!) <span class="tag warn">УВАГА</span></td></tr>
+      <tr data-tags="refraction ior glass water transparent max vray material"><td>Refraction / IOR (скло, вода)</td><td class="how">Principled BSDF → Transmission Weight → 1.0 + IOR</td><td class="note-col">IOR: скло=1.5, вода=1.33, алмаз=2.42 <span class="tag arch">ARCHVIZ</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- RENDER -->
+  <div class="section-title" style="color:var(--accent);margin-top:24px">🎬 Рендер (V-Ray → Cycles)</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max / V-Ray</th><th>Blender / Cycles</th><th>Примітки</th></tr></thead>
+    <tbody>
+      <tr data-tags="v-ray cycles engine blender archviz render max chose"><td>V-Ray движок → вибір</td><td class="how">Render Properties → Render Engine: Cycles (або EEVEE Next)</td><td class="note-col">Cycles = фізично коректний. EEVEE Next (4.2+) = real-time <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="gi global illumination irradiance map light cache vray max bounce"><td>GI: Irradiance Map + Light Cache</td><td class="how">Не потрібно — Path Tracing автоматичний</td><td class="note-col">В Cycles GI = автоматичне. Налаштовуй тільки кількість bounces</td></tr>
+      <tr data-tags="dmc sampler quality samples adaptive threshold max vray noise"><td>DMC Sampler / Noise Threshold</td><td class="how">Cycles → Sampling → Adaptive Sampling + Noise Threshold</td><td class="note-col">Noise Threshold 0.01 = якість. Нижче = довше але тихіше <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="denoiser denoise intel optix vray max postprocess ai"><td>V-Ray Denoiser</td><td class="how">Render Properties → Denoising → OptiX (GPU) або OpenImageDenoise</td><td class="note-col">OptiX = швидший на Nvidia. OIDN = CPU, universal <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="color mapping filmic tone aces exposure gamma max vray correction"><td>Color Mapping (Filmic / ACES)</td><td class="how">Render Properties → Color Management → View Transform: Filmic / AgX</td><td class="note-col">AgX (Blender 4.0+) = ще більш реалістичний ніж Filmic <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="vray frame buffer vfb color grading post process max compositor"><td>V-Ray Frame Buffer (VFB)</td><td class="how">Compositor (Shift+F3 → node editor type = Compositor)</td><td class="note-col">Use Compositor в Render Properties → Post Processing</td></tr>
+      <tr data-tags="render elements passes beauty shadow ao max vray layers output"><td>Render Elements (Beauty, Shadow, AO...)</td><td class="how">View Layer Properties → Passes</td><td class="note-col">Diffuse/Glossy/Transmission/Shadow/AO/Z/Cryptomatte. EXR = всі в одному файлі <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="cryptomatte mask object material id selection max vray passes"><td>MultiMatte / Cryptomatte</td><td class="how">View Layer → Passes → Cryptomatte</td><td class="note-col">По Object або Material. Ізольована маска в compositor/PS</td></tr>
+      <tr data-tags="bucket rendering tile render size cpu gpu max vray"><td>Bucket Rendering (тайли)</td><td class="how">Render Properties → Performance → Tiles X/Y (або Auto Tile Size)</td><td class="note-col">GPU: великі тайли (256+). CPU: менші (32–64)</td></tr>
+      <tr data-tags="render region crop blowup region max ctrl b camera"><td>Render Region / Blowup</td><td class="how"><kbd>Ctrl+B</kbd> (Camera View) → намалюй регіон</td><td class="note-col">Ctrl+Alt+B = зняти регіон</td></tr>
+      <tr data-tags="light path bounces global illumination max gi settings vray"><td>GI Bounces (відскоки)</td><td class="how">Render → Light Paths → Max Bounces</td><td class="note-col">Total: 12. Diffuse: 4. Glossy: 4. Transmission: 12 — для archviz <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="caustics light refraction glass water pool max vray cycles"><td>Caustics (каустика)</td><td class="how">Render → Light Paths → Caustics (увімкнути)</td><td class="note-col">Дуже повільно. Для більшості archviz сцен = вимкнено</td></tr>
+      <tr data-tags="output resolution format jpg exr png max render output"><td>Output Settings (формат, розмір)</td><td class="how">Output Properties (іконка принтера)</td><td class="note-col">Resolution X/Y, Frame Rate, Output Path, Format (PNG/EXR/JPEG)</td></tr>
+      <tr data-tags="eevee realtime fast preview blender viewport max scanline mentalray"><td>Scanline / ART рендер (швидкий preview)</td><td class="how">Render Engine: EEVEE Next</td><td class="note-col">EEVEE Next (4.2+) = path-traced в реальному часі. Набагато кращий ніж старий EEVEE</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- SCENE MANAGEMENT -->
+  <div class="section-title" style="color:var(--accent);margin-top:24px">🗂 Сцена і управління</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max</th><th>Blender</th><th>Примітки</th></tr></thead>
+    <tbody>
+      <tr data-tags="layers management visibility scene max collections m"><td>Layers (управління об'єктами)</td><td class="how">Collections</td><td class="note-col">M = перемістити. Ctrl+G = нова. Click очка в Outliner = показати/сховати</td></tr>
+      <tr data-tags="group objects hierarchy max ctrl g collection"><td>Group</td><td class="how">Collection (<kbd>Ctrl+G</kbd>)</td><td class="note-col">Instance групи = Shift+A → Collection Instance</td></tr>
+      <tr data-tags="clone instance alt d linked duplicate max object copy"><td>Instance / Clone (пов'язана копія)</td><td class="how"><kbd>Alt+D</kbd> (Linked Duplicate)</td><td class="note-col">Alt+D = спільна геометрія. Shift+D = повна копія</td></tr>
+      <tr data-tags="freeze lock object prevent move max h hide lock icon"><td>Freeze (заморозити об'єкт)</td><td class="how">Outliner → Lock icon (🔒) або H (Hide)</td><td class="note-col">Lock icon = не виділяється. H = схований</td></tr>
+      <tr data-tags="unfreeze all objects unlock unhide alt h max show"><td>Unfreeze All / Unhide All</td><td class="how"><kbd>Alt+H</kbd></td><td class="note-col"></td></tr>
+      <tr data-tags="hide selection h show unhide all alt h max visible"><td>Hide Selected</td><td class="how"><kbd>H</kbd> / <kbd>Shift+H</kbd> (сховати невиділене)</td><td class="note-col">Alt+H = показати все</td></tr>
+      <tr data-tags="isolate solo local view only selected max slash "><td>Isolate Selection</td><td class="how"><kbd>/</kbd> (числова клавіша)</td><td class="note-col">Local View — тільки виділене. Повторно / = вийти</td></tr>
+      <tr data-tags="object properties name id color label max outliner rename"><td>Object Properties (ім'я, ID...)</td><td class="how">Object Properties (квадратик іконка) + Outliner DoubleClick = rename</td><td class="note-col">F2 у Outliner = перейменувати</td></tr>
+      <tr data-tags="pivot point origin change set max affect hierarchy center"><td>Pivot Point (центр трансформацій)</td><td class="how">ПКМ → Set Origin або <kbd>.</kbd> вибрати режим Pivot</td><td class="note-col">Set Origin to Geometry / Origin to 3D Cursor тощо</td></tr>
+      <tr data-tags="xref external reference link blend max file append"><td>XRef Scene / Object</td><td class="how">File → Link (зв'язаний) або Append (копія)</td><td class="note-col">Link = не редагується локально. Append = повна копія</td></tr>
+      <tr data-tags="parent link hierarchy child parent constraint max ctrl p"><td>Parent / Link (ієрархія)</td><td class="how"><kbd>Ctrl+P</kbd> → Parent to Object</td><td class="note-col">Alt+P = зняти батька</td></tr>
+      <tr data-tags="align object snap to surface grid position max s align"><td>Align Object (вирівняти)</td><td class="how">Object → Transform → Align Objects</td><td class="note-col">Axis, Mode (Min/Max/Center/Positive/Negative)</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ARCHVIZ WORKFLOW -->
+  <div class="section-title" style="color:var(--accent);margin-top:24px">🏛 Archviz Workflow (специфічно)</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>3DS Max / V-Ray (завдання)</th><th>Blender / Cycles</th><th>Примітки</th></tr></thead>
+    <tbody>
+      <tr data-tags="forest pack scatter trees grass plants populate max archviz vray"><td>Forest Pack / Scatter (рослини, трава)</td><td class="how">Geometry Nodes → Distribute Points on Faces → Instance on Points</td><td class="note-col">Або addon Geo-Scatter. Дуже потужно і гнучко <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="railclone array along path profile spline modular max archviz"><td>RailClone (модульний масив по шляху)</td><td class="how">Geometry Nodes → Curve → Instance on Points / Resample Curve</td><td class="note-col">Поки складніше ніж в Max але гнучкіше</td></tr>
+      <tr data-tags="vray proxy max mesh substitute scene optimization heavy models"><td>V-Ray Proxy (замінник важкого меша)</td><td class="how">File → Link (як Linked Object) або Geometry Nodes Instance</td><td class="note-col">Linked = завантажується тільки при рендері</td></tr>
+      <tr data-tags="hdri polyhaven 3 point lighting environment world max vray dome light"><td>HDRI освітлення (dome light)</td><td class="how">World Properties → Background → Environment Texture (.hdr/.exr)</td><td class="note-col">polyhaven.com = безкоштовні HDRI. Strength = яскравість <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="sun sky system outdoor daylight exterior max vray physical sun"><td>Daylight System (сонце + небо)</td><td class="how">Sun Light + World → Sky Texture (Nishita) або HDRI</td><td class="note-col">Sun Rotation = азимут. Elevation = висота сонця <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="glass window curtain wall reflection refraction max vray interior"><td>Скло/Вікна (archviz)</td><td class="how">Principled BSDF → Transmission Weight=1.0, IOR=1.5, Roughness=0</td><td class="note-col">Thin Film = тонке скло без товщини (меш-плейн) <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="fabric curtain cloth sofa material max vray velvet texture archviz"><td>Тканина / Оббивка (fabric, velvet)</td><td class="how">Principled BSDF → Sheen Weight + Sheen Roughness + Roughness ~0.7</td><td class="note-col">Sheen = оксамит/флок. Normal Map = рельєф тканини <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="ambient occlusion baked static ao bake texture max vray"><td>Ambient Occlusion (baked AO)</td><td class="how">Bake → Ambient Occlusion або Compositor → AO Pass</td><td class="note-col">Render → Bake → AO. Або View Layer → Passes → AO (render-time)</td></tr>
+      <tr data-tags="uvw xform apply reset scale rotation position max ctrl a blender"><td>Reset XForm / Apply Transform</td><td class="how"><kbd>Ctrl+A</kbd> → All Transforms або Apply Scale</td><td class="note-col">ОБОВ'ЯЗКОВО перед FBX-експортом і Cloth/Physics <span class="tag warn">ВАЖЛИВО</span></td></tr>
+      <tr data-tags="render time overwrite material override color selection max vray checkmate"><td>Material Override (перекрити всі матеріали)</td><td class="how">View Layer Properties → Override → Material</td><td class="note-col">Один матеріал на всю сцену — для перевірки форм (clay render)</td></tr>
+      <tr data-tags="clay render grey test lighting max archviz white material check"><td>Clay Render (перевірка освітлення)</td><td class="how">View Layer → Material Override → простий сірий Diffuse</td><td class="note-col">Або в Viewport: Material Preview → Show Overlays вимкнено</td></tr>
+      <tr data-tags="photographic exposure camera exposure ev stops max corona vray post"><td>Photographic Exposure</td><td class="how">Camera → Physical Camera ON → ISO + Shutter + f-Stop</td><td class="note-col">Або Render → Color Management → Exposure (простіший варіант) <span class="tag arch">ARCHVIZ</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- GEOMETRY NODES = PARTICLES/SCATTER/ARRAY -->
+  <div class="section-title" style="color:var(--accent);margin-top:24px">🔵 Geometry Nodes (замість Max Scatter/Array/Forest Pack)</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Що хочеш зробити (Max/V-Ray)</th><th>Geometry Nodes (Blender)</th><th>Де знайти</th></tr></thead>
+    <tbody>
+      <tr data-tags="geometry nodes add geonodes modifier new setup blender start"><td>Як почати Geometry Nodes</td><td class="how">Виділи об'єкт → Properties → Wrench → Add Modifier → Geometry Nodes</td><td class="note-col">Або Ctrl+Shift+N = новий GeoNodes modifier</td></tr>
+      <tr data-tags="scatter objects distribute surface forest pack max instances blender geo nodes"><td>Scatter (розсіяти об'єкти по поверхні)</td><td class="how">Distribute Points on Faces → Instance on Points</td><td class="note-col">Density = щільність. Instance Object = що розсіювати <span class="tag arch">ARCHVIZ</span></td></tr>
+      <tr data-tags="random rotation scale variation scatter instances blender geo nodes"><td>Рандомна ротація/масштаб скетеру</td><td class="how">Random Value → Rotate Instances / Scale Instances</td><td class="note-col">Vector Random = різна ротація по всіх осях</td></tr>
+      <tr data-tags="array along curve path spline railclone linear max geo nodes"><td>Масив вздовж сплайну (RailClone)</td><td class="how">Resample Curve → Instance on Points</td><td class="note-col">Count = кількість. Або Curve Line → array однакових об'єктів</td></tr>
+      <tr data-tags="procedural pattern grid honeycomb tiles floor ceiling max geo nodes"><td>Процедурні патерни (плитка, решітки)</td><td class="how">Mesh Grid → Delete Faces → Instance on Points</td><td class="note-col">Hex grid, brick, tile — все через Geometry Nodes</td></tr>
+      <tr data-tags="weight paint mask area control scatter density geo nodes vertex weight max"><td>Контроль density через Vertex Weight</td><td class="how">Vertex Weight → Named Attribute → Density input</td><td class="note-col">Paint density brush прямо на поверхні</td></tr>
+    </tbody>
+  </table></div>
+
 </div>
 
 <!-- QUIZ -->
