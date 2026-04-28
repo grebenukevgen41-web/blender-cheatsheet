@@ -1607,6 +1607,14 @@
   <div style="margin-top:8px;font-size:13px">Спробуй по-англійськи або синонім</div>
 </div>
 
+<!-- UNIFIED SEARCH RESULTS -->
+<div id="search-results" style="display:none">
+  <div class="table-wrap"><table id="sr-table">
+    <thead><tr><th>3DS Max / Дія</th><th>Blender</th><th>Примітки / Де</th></tr></thead>
+    <tbody id="sr-body"></tbody>
+  </table></div>
+</div>
+
 </main>
 
 <script>
@@ -1625,51 +1633,111 @@ tabs.forEach(tab => {
   });
 });
 
+const srDiv  = document.getElementById('search-results');
+const srBody = document.getElementById('sr-body');
+
 function applySearch(q) {
   q = (q || '').toLowerCase().trim();
-  let total = 0;
+
+  // ── SEARCH MODE ──────────────────────────────────────────
+  if (q) {
+    // Сховати всі секції, показати unified results
+    sections.forEach(sec => { sec.style.display = 'none'; });
+    srDiv.style.display = 'block';
+    srBody.innerHTML = '';
+    let total = 0;
+
+    sections.forEach(sec => {
+      const secName = sec.dataset.section;
+      // Пропускаємо quiz, checklist, shortcuts, keys (не таблиці)
+      if (['quiz','checklist','settings','shortcuts','keys'].includes(secName)) return;
+
+      // TABLE ROWS
+      sec.querySelectorAll('tbody tr').forEach(row => {
+        const tags = (row.dataset.tags || '').toLowerCase();
+        const firstCell = (row.querySelector('td:first-child') || row).textContent.toLowerCase();
+        if (!tags.includes(q) && !firstCell.includes(q)) return;
+
+        // Клонуємо рядок в результати
+        const clone = row.cloneNode(true);
+        clone.classList.remove('hidden');
+        // Додаємо мітку звідки рядок
+        const labelTd = document.createElement('td');
+        labelTd.style.cssText = 'font-size:10px;color:var(--muted);white-space:nowrap;padding-right:6px';
+        const sectionLabels = {
+          nav:'Навігація', select:'Виділення', transform:'Трансформ',
+          edit:'Edit Mode', modifiers:'Модифікатори', uv:'UV',
+          materials:'Матеріали', render:'Рендер', sculpt:'Скульпт',
+          anim:'Анімація', scene:'Сцена', recipes:'Рецепти',
+          wtf:'WTF', addons:'Аддони', concepts:'Концепції',
+          resources:'Ресурси', max2blender:'Max→Blender'
+        };
+        labelTd.textContent = sectionLabels[secName] || secName;
+        clone.appendChild(labelTd);
+        srBody.appendChild(clone);
+        total++;
+      });
+
+      // RECIPE CARDS — просто показуємо заголовок
+      sec.querySelectorAll('.recipe-card').forEach(card => {
+        const tags = (card.dataset.tags||'').toLowerCase();
+        const title = card.querySelector('.rc-title,.recipe-title,h3,b');
+        const titleText = title ? title.textContent.toLowerCase() : '';
+        if (!tags.includes(q) && !titleText.includes(q)) return;
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td');
+        td1.textContent = title ? title.textContent : '—';
+        const td2 = document.createElement('td');
+        td2.className = 'how';
+        td2.textContent = '🧪 Рецепт — відкрий вкладку для деталей';
+        const td3 = document.createElement('td');
+        td3.className = 'note-col';
+        td3.style.cssText = 'font-size:10px;color:var(--muted)';
+        td3.textContent = 'Рецепти';
+        tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+        srBody.appendChild(tr);
+        total++;
+      });
+
+      // WTF CARDS
+      sec.querySelectorAll('.wtf-card').forEach(card => {
+        const tags = (card.dataset.tags||'').toLowerCase();
+        const title = card.querySelector('.wtf-title,h3,b,strong');
+        const titleText = title ? title.textContent.toLowerCase() : '';
+        if (!tags.includes(q) && !titleText.includes(q)) return;
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td');
+        td1.textContent = title ? title.textContent : '—';
+        const td2 = document.createElement('td');
+        td2.className = 'how';
+        td2.textContent = '🤯 WTF — відкрий вкладку для деталей';
+        const td3 = document.createElement('td');
+        td3.className = 'note-col';
+        td3.style.cssText = 'font-size:10px;color:var(--muted)';
+        td3.textContent = 'WTF';
+        tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+        srBody.appendChild(tr);
+        total++;
+      });
+    });
+
+    document.getElementById('no-results').classList.toggle('show', total === 0);
+    countEl.textContent = `${total} знайдено`;
+    return;
+  }
+
+  // ── BROWSE MODE (no query) ──────────────────────────────
+  srDiv.style.display = 'none';
+  document.getElementById('no-results').classList.remove('show');
+  countEl.textContent = '';
 
   sections.forEach(sec => {
     const secName = sec.dataset.section;
     const inScope = activeTab === 'all' || secName === activeTab;
-
-    if (!inScope) { sec.style.display = 'none'; return; }
-
-    // TABLE ROWS — шукаємо тільки по data-tags і першій колонці (td:first-child)
-    sec.querySelectorAll('tbody tr').forEach(row => {
-      const tags = (row.dataset.tags || '').toLowerCase();
-      const firstCell = (row.querySelector('td:first-child') || row).textContent.toLowerCase();
-      const match = !q || tags.includes(q) || firstCell.includes(q);
-      row.classList.toggle('hidden', !match);
-      if (match) total++;
-    });
-
-    // RECIPE CARDS
-    sec.querySelectorAll('.recipe-card').forEach(card => {
-      const match = !q || (card.dataset.tags||'').toLowerCase().includes(q) || card.querySelector('h3,b,strong') && card.querySelector('h3,b,strong').textContent.toLowerCase().includes(q);
-      card.classList.toggle('hidden', !match);
-      if (match) total++;
-    });
-
-    // WTF CARDS
-    sec.querySelectorAll('.wtf-card').forEach(card => {
-      const match = !q || (card.dataset.tags||'').toLowerCase().includes(q) || card.querySelector('h3,b,strong,.wtf-title') && card.querySelector('h3,b,strong,.wtf-title').textContent.toLowerCase().includes(q);
-      card.classList.toggle('hidden', !match);
-      if (match) total++;
-    });
-
-    // Show/hide section
-    const hasSearchable = sec.querySelectorAll('tbody tr, .recipe-card, .wtf-card').length > 0;
-    if (hasSearchable) {
-      const anyVisible = sec.querySelectorAll('tbody tr:not(.hidden), .recipe-card:not(.hidden), .wtf-card:not(.hidden)').length;
-      sec.style.display = (anyVisible === 0 && q) ? 'none' : 'block';
-    } else {
-      sec.style.display = q ? 'none' : 'block';
-    }
+    sec.style.display = inScope ? 'block' : 'none';
+    // Показати всі рядки знову
+    sec.querySelectorAll('tbody tr, .recipe-card, .wtf-card').forEach(el => el.classList.remove('hidden'));
   });
-
-  document.getElementById('no-results').classList.toggle('show', total === 0 && !!q);
-  countEl.textContent = q ? `${total} знайдено` : '';
 }
 
 applySearch('');
